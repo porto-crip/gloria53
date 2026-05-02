@@ -182,7 +182,7 @@ const ResidentialComplex = ({
   };
 
   return (
-    <article className="grid gap-8">
+    <article className="grid gap-8 group ">
       <div
         role="button"
         tabIndex={0}
@@ -206,11 +206,12 @@ const ResidentialComplex = ({
           <div
             className="absolute inset-0 cursor-pointer overflow-hidden rounded-4xl bg-cover bg-center bg-no-repeat [backface-visibility:hidden]"
             style={{
-              backgroundImage: `url('${imageUrl}')`,
+              // backgroundImage: `url('${imageUrl}')`,
               boxShadow: "inset 0 -20px 20px -10px rgba(0, 0, 0, 0.5)",
             }}
             aria-label={imageAlt}
           >
+            <img src={imageUrl} alt="imageAlt" className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.015]"/>
             <div
               className={`relative top-[calc(100%-11rem)] grid h-44 content-center items-center justify-between gap-3 rounded-b-4xl bg-gradient-to-t from-black/80 via-black/60 to-transparent px-6 pb-12 transition-opacity duration-300 sm:flex sm:px-8 sm:pb-5 md:flex lg:px-10 ${
                 isDesktop && isClicked ? "opacity-0" : "opacity-100"
@@ -280,7 +281,7 @@ const ResidentialComplex = ({
             </div>
 
             <div
-              className={`absolute bottom-4 right-4 block rounded-full bg-black/40 px-3 py-1 text-xs text-white ${
+              className={`absolute bottom-4 right-4 block rounded-full bg-black/40 px-3 py-1 text-xs text-white group-hover:bg-white group-hover:text-dark transition duration-300 ${
                 isClicked ? "hidden" : ""
               }`}
             >

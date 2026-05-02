@@ -1,3 +1,5 @@
+import { ArrowRight } from '@/icons/ArrowRight'
+
 const PromoCard = ({
     title,
     text,
@@ -8,7 +10,7 @@ const PromoCard = ({
     return (
         <article className="group relative min-h-[360px] overflow-hidden rounded-4xl sm:min-h-[420px] lg:min-h-[500px]">
       <img
-        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+        className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
         src={image}
         alt={alt}
       />
@@ -33,11 +35,7 @@ const PromoCard = ({
           className="flex h-12 w-12 items-center justify-center self-end rounded-full bg-white transition duration-200 active:scale-95 active:bg-accent md:h-15 md:w-15"
           aria-label={`Подробнее: ${title}`}
         >
-          <img
-            src="/arrow-right.svg"
-            alt=""
-            className="h-5 w-7 transition-transform duration-200 group-hover:translate-x-1 group-active:translate-x-0 md:h-6 md:w-7"
-          />
+          <ArrowRight className="text-dark/70 group-hover:text-accent group-hover:translate-x-px transition duration-300 h-7 w-7"/>
         </a>
       </div>
     </article>

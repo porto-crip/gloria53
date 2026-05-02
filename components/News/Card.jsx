@@ -16,7 +16,7 @@ const CardNews = ({
       <Link href={href} className="grid h-full content-start">
         <div className="relative overflow-hidden h-fit">
           <img
-            className="h-[200px] w-full object-cover transition duration-500 group-hover:scale-[1.04] sm:h-[220px] md:h-[240px]"
+            className="h-[200px] w-full object-cover transition duration-500 group-hover:scale-[1.03] sm:h-[220px] md:h-[240px]"
             src={imageUrl}
             alt={imageAlt || title}
           />
@@ -34,7 +34,7 @@ const CardNews = ({
           </div>
         </div>
 
-        <div className="grid gap-4 p-5 sm:p-6">
+        <div className="grid gap-12 sm:gap-4 p-5 sm:p-6">
           <div className="grid gap-3">
             <h3 className={`line-clamp-2 text-xl font-medium leading-tight text-dark transition group-hover:text-accent ${styles.titleTruncate}`}>
               {title}
@@ -52,8 +52,8 @@ const CardNews = ({
           <div className="mt-auto flex items-center justify-between gap-4 pt-2">
 
             <section className=" px-4 flex gap-3 h-10 w-30 items-center justify-center rounded-full bg-white transition group-hover:bg-accent group-hover:text-white">
-            <span className="text-sm font-medium text-accent group-hover:text-white">Читать</span>
-              <ArrowRight className="text-dark/70 group-hover:text-white h-5.5 w-5.5"/>
+            <span className="text-sm font-medium text-accent group-hover:text-white duration-300">Читать</span>
+              <ArrowRight className="text-dark/70 group-hover:text-white h-5.5 w-5.5 group-hover:translate-x-px transition duration-300"/>
             </section>
           </div>
         </div>

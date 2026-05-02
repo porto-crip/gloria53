@@ -1,146 +1,255 @@
-import { formatted } from '@/utils/formatPrice'
-import AmenityList from '@/components/Amenity/AmenityList'
-import AmenityItem from '@/components/Amenity/AmenityItem'
-import FreemodeSliderChildren from '@/components/Swiper/FreemodeSliderChildren';
+import { formatted } from "@/utils/formatPrice";
+import AmenityItem from "@/components/Amenity/AmenityItem";
+import FreemodeSliderChildren from "@/components/Swiper/FreemodeSliderChildren";
+import Button from "@/components/UI/Button";
 
-const AppartmentCard = ({
-    view,
-    id,
-    rooms,
-    sqm,
-    price,
-    priceSqm,
-    imageUrl,
-    imageAlt,
-    position,
-    floor,
-    floorTotal,
-    amenities = []
-}) => {
-
-    const formattedPrice = formatted(price)
-    const formattedSqm = formatted(sqm)
-    const formattedPriceSqm = formatted(priceSqm)
-    if (view === 'grid') {
-        return (
-            <article className="bg-dark10 p-6 rounded-3xl cursor-pointer">
-                <header className="grid gap-1">
-                    <div className="flex justify-between">
-                        <p className="text-2xl text-dark font-medium">{rooms} комнаты, {formattedSqm}&nbsp;м<sup>2</sup></p>
-                        <div className="justify-items-end">
-                            <p className="text-base bg-dark15 rounded-lg text-dark px-2 py-1">№{id}</p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-1">
-                        <p className="text-2xl text-accent font-medium">{formattedPrice}</p>
-                        <p className="text-xl text-dark80">·</p>
-                        <p className="text-sm text-dark80">{formattedPriceSqm} м<sup>2</sup></p>
-                    </div>
-
-                    <div>
-                        <p className="text-sm text-dark80">Ипотека от 37 832 ₽ в мес.</p>
-                    </div>
-                </header>
-
-
-                <div className="my-10 md:my-16 flex justify-center 2xl:justify-start">
-                    <img className="mix-blend-multiply w-55 md:w-70 lg:w-auto" src={imageUrl} alt={imageAlt} />
-                </div>
-
-                <section className="flex items-center gap-1">
-                    <p className="text-dark text-sm md:text-base">Позиция {position}</p>
-                    <p className="text-xl text-dark80">·</p>
-                    <p className="text-dark text-sm md:text-base">Этаж {floor} из {floorTotal}</p>
-                </section>
-                <footer className='border-t-2 border-dark/15 mt-2 pt-4'>
-                    <FreemodeSliderChildren className='rounded-xl'>
-                        {amenities.map((amenityId) => (
-                            <AmenityItem key={amenityId} amenityId={amenityId} className={'rounded-xl text-sm'}/>
-                        ))}
-                    </FreemodeSliderChildren>
-                    
-                        {/* <AmenityList amenities={amenities} /> */}
-                    
-                </footer>
-            </article>
-        );
-    } return (
-
-        <article className='md:grid flex justify-between flex-row md:grid-cols-[1fr_1fr_0.6fr_1fr_0.4fr] gap-6 md:gap-10 lg:gap-auto xl:grid-cols-[1fr_1.3fr_1fr_1.3fr_1fr] bg-dark10 p-8 rounded-3xl'>
-            <section className='content-center'>
-                <img
-                    className='mix-blend-multiply justify-self-center-safe mt-7 sm:ml-5 w-[clamp(150px,_25vw,_600px)] sm:w-50 -rotate-90 sm:rotate-0 md:w-50'
-                    src={imageUrl}
-                    alt={imageAlt} />
-            </section>
-
-            <section className='hidden md:flex flex-col gap-1 justify-center'>
-                <section className="flex gap-4">
-                    <h3 className="text-base md:text-lg lg:text-xl xl:text-2xl 2xl:text-[28px] text-dark font-medium">{rooms} комнаты, {formattedSqm}&nbsp;м<sup>2</sup></h3>
-                </section>
-                <section className="grid lg:flex items-center gap-1">
-                    <p className="text-base md:text-lg lg:text-2xl xl:text-2xl 2xl:text-[28px] text-accent font-medium">{formattedPrice}</p>
-                    <p className="text-2xl hidden lg:block text-dark80">·</p>
-                    <p className="text-xs lg:text-sm xl:text-base text-dark80">{formattedPriceSqm} м<sup>2</sup></p>
-                </section>
-                <section className='pt-2 lg:pt-0'>
-                    <p className="text-xs lg:text-sm xl:text-base text-dark80">Ипотека от 37 832 ₽ в&nbsp;мес.</p>
-                </section>
-            </section>
-
-            {/* mobile */}
-
-            <section className='hidden md:grid gap-2 content-center justify-center'>
-                <p className="text-dark text-xs lg:text-sm xl:text-base">Позиция {position}</p>
-                {/* <p className="text-xl text-dark80 hidden lg:block">·</p> */}
-                <p className="text-dark text-xs lg:text-sm xl:text-base">Этаж {floor} из {floorTotal}</p>
-            </section>
-            <section className='hidden md:grid mx-auto gap-2 content-center '>
-                {amenities.map((amenityId) => (
-                    <AmenityItem key={amenityId} amenityId={amenityId} className={'max-w-min text-xs rounded-xl lg:text-sm'}/>
-                ))}
-            </section>
-            <section className='flex justify-end items-center absolute md:static'>
-                <p className="text-xs lg:text-sm xl:text-base bg-dark/10 rounded-lg text-dark px-2 py-1">№{id}</p>
-            </section>
-
-            <section className='flex justify-between md:hidden'>
-                <section className='flex flex-col gap-2'>
-                    <p className='text-dark80 text-xs sm:text-sm'>Количество&nbsp;комнат:</p>
-                    <p className='text-dark80 text-xs sm:text-sm'>Площадь</p>
-                    <p className='text-dark80 text-xs sm:text-sm'>Стоимость:</p>
-                    <p className='text-dark80 text-xs sm:text-sm'>Стоимость&nbsp;за&nbsp;м<sup>2</sup>:</p>
-                    <p className='text-dark80 text-xs sm:text-sm'>Ипотека&nbsp;от&nbsp;(в&nbsp;месяц):</p>
-                    <p className='text-dark80 text-xs sm:text-sm'>Позиция:</p>
-                    <p className='text-dark80 text-xs sm:text-sm'>Этаж из {floorTotal}:</p>
-                </section>
-                <div className='grid'>
-                    <section className='flex flex-col gap-2 items-end'>
-                        
-                            <p className="text-xs sm:text-sm text-dark font-medium ">{rooms}</p>
-                            <p className='text-xs sm:text-sm text-dark font-medium'>{formattedSqm} м<sup>2</sup></p>
-                        
-                        
-                            <p className="text-xs sm:text-sm text-dark font-medium">{formattedPrice}&nbsp;₽</p>
-                            <p className="text-xs sm:text-sm text-dark">{formattedPriceSqm}&nbsp;₽</p>
-                        
-                        
-                            <p className="text-xs sm:text-sm text-dark">37 832 ₽</p>
-        
-                    </section>
-        
-                    <section className='flex flex-col gap-2 items-end'>
-                        <p className="text-dark text-sm">{position}</p>
-                        <p className="text-dark text-sm">{floor}</p>
-                    </section>
-                
-                </div>
-            </section>
-        </article>
-    );
+const formatArea = (value) => {
+  if (value === null || value === undefined) return "";
+  return String(value).replace(".", ",");
 };
 
+const ApartmentTitle = ({ rooms, area }) => {
+  return (
+    <h3 className="text-xl font-medium leading-tight text-dark sm:text-2xl">
+      {rooms} комнаты, {formatArea(area)}&nbsp;м<sup>2</sup>
+    </h3>
+  );
+};
 
+const ApartmentPrice = ({ price, priceSqm }) => {
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <p className="text-xl font-medium text-accent sm:text-2xl">
+        {formatted(price)}
+      </p>
 
+      <span className="text-dark80">·</span>
 
-export default AppartmentCard;
+      <p className="text-sm text-dark80">
+        {formatted(priceSqm)} ₽ / м<sup>2</sup>
+      </p>
+    </div>
+  );
+};
+
+const ApartmentMeta = ({ position, floor, floorTotal, className = "" }) => {
+  return (
+    <div
+      className={`flex flex-wrap items-center gap-2 text-sm text-dark ${className}`}
+    >
+      <span>Позиция {position}</span>
+      <span className="text-dark80">·</span>
+      <span>
+        Этаж {floor} из {floorTotal}
+      </span>
+    </div>
+  );
+};
+
+const ApartmentNumber = ({ id }) => {
+  return (
+    <span className="rounded-lg bg-dark15 px-2 py-1 text-sm text-dark">
+      №{id}
+    </span>
+  );
+};
+
+const ApartmentImage = ({ imageUrl, imageAlt, className = "" }) => {
+  return (
+    <img
+      className={`mix-blend-multiply object-contain ${className}`}
+      src={imageUrl}
+      alt={imageAlt}
+    />
+  );
+};
+
+const ApartmentAmenitiesSlider = ({ amenities }) => {
+  if (!amenities) return null;
+
+  return (
+    <footer className="mt-4 overflow-y-auto flex md:block">
+      <FreemodeSliderChildren className="rounded-xl">
+        {amenities.map((amenityId) => (
+          <AmenityItem
+            key={amenityId}
+            amenityId={amenityId}
+            className="rounded-xl text-sm"
+          />
+        ))}
+      </FreemodeSliderChildren>
+    </footer>
+  );
+};
+
+const ApartmentAmenitiesList = ({ amenities }) => {
+  if (!amenities) return null;
+
+  return (
+    <div className="hidden gap-2 md:grid">
+      {amenities.map((amenityId) => (
+        <AmenityItem
+          key={amenityId}
+          amenityId={amenityId}
+          className="max-w-max rounded-xl text-xs lg:text-sm"
+        />
+      ))}
+    </div>
+  );
+};
+
+const ApartmentMobileDetails = ({
+  rooms,
+  sqm,
+  price,
+  priceSqm,
+  position,
+  floor,
+  floorTotal,
+}) => {
+  const rows = [
+    ["Количество комнат", rooms],
+    ["Площадь", `${formatArea(sqm)} м²`],
+    ["Стоимость", formatted(price)],
+    ["Стоимость за м²", `${formatted(priceSqm)} ₽`],
+    ["Ипотека", "Рассчитывается индивидуально"],
+    ["Позиция", position],
+    [`Этаж из ${floorTotal}`, floor],
+  ];
+
+  return (
+    <div className="grid gap-2 md:hidden">
+      {rows.map(([label, value]) => (
+        <div key={label} className="grid grid-cols-[1fr_auto] gap-4">
+          <p className="text-xs text-dark80 sm:text-sm">{label}:</p>
+
+          <p className="text-right text-xs font-medium text-dark sm:text-sm">
+            {value}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const ApartmentCardGrid = ({
+  id,
+  rooms,
+  sqm,
+  price,
+  priceSqm,
+  imageUrl,
+  imageAlt,
+  position,
+  floor,
+  floorTotal,
+  amenities,
+}) => {
+  return (
+    <article className="group flex flex-col rounded-3xl bg-dark10 p-5 sm:p-6">
+      <header className="grid gap-1">
+        <div className="flex items-start justify-between gap-4">
+          <ApartmentTitle rooms={rooms} area={sqm} />
+          <ApartmentNumber id={id} />
+        </div>
+
+        <ApartmentPrice price={price} priceSqm={priceSqm} />
+
+        <p className="text-xs text-start text-dark80 bg-white/70 px-2 py-1 rounded-lg">
+          *Ипотека рассчитывается индивидуально
+        </p>
+      </header>
+
+      <div className="grid h-full content-between">
+        <div className="my-8 flex place-self-center md:place-self-auto">
+          <ApartmentImage
+            imageUrl={imageUrl}
+            imageAlt={imageAlt}
+            className="w-fit max-w-[280px] h-fit"
+          />
+        </div>
+
+        <ApartmentMeta
+          position={position}
+          floor={floor}
+          floorTotal={floorTotal}
+          className="justify-center md:justify-start"
+        />
+
+        <ApartmentAmenitiesSlider amenities={amenities} className=""/>
+
+        <div className="mt-5">
+          <Button text="Подробнее" size="sm" variant="outline" fullWidth />
+        </div>
+      </div>
+    </article>
+  );
+};
+
+const ApartmentCardList = ({
+  id,
+  rooms,
+  sqm,
+  price,
+  priceSqm,
+  imageUrl,
+  imageAlt,
+  position,
+  floor,
+  floorTotal,
+  amenities,
+}) => {
+  return (
+    <article className="relative grid gap-6 rounded-3xl bg-dark10 p-5 sm:p-6 md:grid-cols-[160px_1.5fr_0.8fr_1fr_auto] md:items-center lg:p-8">
+      <div className="flex justify-center md:justify-start">
+        <ApartmentImage
+          imageUrl={imageUrl}
+          imageAlt={imageAlt}
+          className="h-[160px] w-full max-w-[220px] md:h-[130px] md:max-w-[160px]"
+        />
+      </div>
+
+      <div className="hidden gap-2 md:grid">
+        <ApartmentTitle rooms={rooms} area={sqm} />
+        <ApartmentPrice price={price} priceSqm={priceSqm} />
+
+        <p className="text-sm text-dark80">
+          Ипотека рассчитывается индивидуально
+        </p>
+      </div>
+
+      <ApartmentMeta
+        position={position}
+        floor={floor}
+        floorTotal={floorTotal}
+        className="hidden md:flex"
+      />
+
+      <ApartmentAmenitiesList amenities={amenities} />
+
+      <div className="absolute right-5 top-5 md:static">
+        <ApartmentNumber id={id} />
+      </div>
+
+      <ApartmentMobileDetails
+        rooms={rooms}
+        sqm={sqm}
+        price={price}
+        priceSqm={priceSqm}
+        position={position}
+        floor={floor}
+        floorTotal={floorTotal}
+      />
+    </article>
+  );
+};
+
+const ApartmentCard = (props) => {
+  if (props.view === "grid") {
+    return <ApartmentCardGrid {...props} />;
+  }
+
+  return <ApartmentCardList {...props} />;
+};
+
+export default ApartmentCard;

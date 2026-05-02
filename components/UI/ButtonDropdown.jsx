@@ -1,6 +1,7 @@
 "use client";
 import { redirect } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { ChevronRight } from "@/icons/ChevronRight";
 
 const buttonIcon = ({ text, iconLink, iconAlt, isOpen = false }) => {
   const [isOpenList, setIsOpenList] = useState(false);
@@ -47,17 +48,12 @@ const buttonIcon = ({ text, iconLink, iconAlt, isOpen = false }) => {
         text-dark
           transition
           hover:border-accent hover:text-accent
-          active:scale-[0.98]
+          active:scale-[0.99]
           
             `}
       >
         {isPressedParam !== null ? paramSort[isPressedParam] : text}
-        <img
-          className={`inline ${isOpenList ? "rotate-270" : "rotate-90"} transition duration-300 ease-in-out`}
-          width={"24px"}
-          src={iconLink}
-          alt={iconAlt}
-        />
+        < ChevronRight className={`inline ${isOpenList ? "rotate-180" : null } transition duration-300 ease-in-out w-5 h-5`}/>
       </button>
 
       {/* Десктопная версия - выпадающий список */}

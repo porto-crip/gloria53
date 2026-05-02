@@ -5,6 +5,7 @@ import ButtonParam from "@/components/Filter/UI/ButtonSelectParam";
 import Button from "@/components/UI/Button";
 import Range from "@/components/Filter/UI/Range";
 import FilterModal from "@/components/Filter/UI/FilterModal";
+import { ChevronRight } from '@/icons/ChevronRight';
 import styles from "./Filter.module.css";
 
 const ROOM_OPTIONS = ["1", "2", "3"];
@@ -54,7 +55,7 @@ const Filter = () => {
     <>
       <div className="mt-12 mb-6 grid gap-6">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-          <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-[auto_1fr] xl:hidden">
+          <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-[1fr_1fr] xl:hidden">
             <Button
               text="Фильтры"
               size="md"
@@ -95,10 +96,8 @@ const Filter = () => {
               text="Ещё фильтры"
               size="md"
               variant="outline"
-              icon
-              iconUrl="/chevron-arrow.svg"
-              iconAlt=""
-              iconClassName="h-5 w-5"
+              iconImport={ChevronRight}
+              iconClassName="w-5 h-5 rotate-270"
               onClick={openFilterModal}
             />
           </div>

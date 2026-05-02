@@ -1,26 +1,27 @@
-'use client'
+"use client";
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 const Button = ({
   children,
   text,
-  type = 'button',
-  size = 'md',
-  variant = 'accent',
-  className = '',
+  type = "button",
+  size = "md",
+  variant = "accent",
+  className = "",
   isLoading = false,
   disabled = false,
-  linkToPage = '',
+  linkToPage = "",
   onClick,
   icon = false,
-  iconUrl = '',
-  iconAlt = '',
-  iconClassName = '',
-  iconPosition = 'right',
+  iconImport = null,
+  iconUrl = "",
+  iconAlt = "",
+  iconClassName = "",
+  iconPosition = "right",
   fullWidth = false,
 }) => {
-  const router = useRouter()
+  const router = useRouter();
 
   const variants = {
     accent: `
@@ -43,29 +44,31 @@ const Button = ({
       bg-dark10 text-dark
       hover:bg-dark15
     `,
-  }
+  };
 
   const sizes = {
-    sm: 'h-10 px-5 text-sm rounded-4xl',
-    md: 'h-12 px-auto sm:px-7 text-base rounded-4xl',
-    lg: 'h-14 px-8 text-base rounded-4xl',
-    icon: 'h-12 w-12 rounded-full',
-  }
+    sm: "h-10 px-5 text-sm rounded-4xl",
+    md: "h-12 px-auto sm:px-7 text-base rounded-4xl",
+    lg: "h-14 px-8 text-base rounded-4xl",
+    icon: "h-12 w-12 rounded-full",
+  };
+
+  const IconComponent = iconImport;
 
   const handleClick = (event) => {
-    if (isLoading || disabled) return
+    if (isLoading || disabled) return;
 
     if (onClick) {
-      onClick(event)
-      return
+      onClick(event);
+      return;
     }
 
     if (linkToPage) {
-      router.push(linkToPage)
+      router.push(linkToPage);
     }
-  }
+  };
 
-  const content = children || text
+  const content = children || text;
 
   return (
     <button
@@ -77,26 +80,29 @@ const Button = ({
         transition-all duration-200
         active:scale-[0.98]
         disabled:pointer-events-none disabled:opacity-60
-        ${fullWidth ? 'w-full' : 'w-auto'}
+        ${fullWidth ? "w-full" : "w-auto"}
         ${variants[variant] || variants.accent}
         ${sizes[size] || sizes.md}
         ${className}
-        ${isLoading ? 'cursor-wait opacity-70' : ''}
+        ${isLoading ? "cursor-wait opacity-70" : ""}
       `}
     >
-      {icon && iconPosition === 'left' ? (
+      {icon && iconPosition === "left" ? (
         <img src={iconUrl} alt={iconAlt} className={iconClassName} />
       ) : null}
-<span className="min-w-0 truncate">
 
-      {isLoading ? 'Загрузка...' : content}
-  </span>
 
-      {icon && iconPosition === 'right' ? (
+      <span className="min-w-0 truncate">
+        {isLoading ? "Загрузка..." : content}
+      </span>
+
+      {iconImport ? <IconComponent className={iconClassName} /> : null}
+
+      {icon && iconPosition === "right" ? (
         <img src={iconUrl} alt={iconAlt} className={iconClassName} />
       ) : null}
     </button>
-  )
-}
+  );
+};
 
 export default Button;
