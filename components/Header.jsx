@@ -6,16 +6,16 @@ import { Dialog, Transition, TransitionChild, DialogPanel, DialogTitle } from '@
 
 const NAV_LINKS = [
   {
-    label: 'ЖК Юннатов',
-    href: '/unnatov',
-    mobileOnly: true,
-  },
-  {
     label: 'Квартиры',
     href: '/apartments',
   },
   {
-    label: 'О нас',
+    label: 'ЖК Юннатов',
+    href: '/unnatov',
+    // mobileOnly: true,
+  },
+  {
+    label: 'Построенные объекты',
     href: '#',
   },
   {
@@ -23,8 +23,8 @@ const NAV_LINKS = [
     href: '#',
   },
   {
-    label: 'Построенные объекты',
-    href: '#',
+    label: 'О компании',
+    href: '/about',
   },
 ]
 

@@ -25,30 +25,66 @@ const Button = ({
 
   const variants = {
     accent: `
-      bg-accent text-white
-      hover:bg-dark hover:text-white
-    `,
+    bg-accent text-white
+    hover:bg-dark hover:text-white
+  `,
+
+    accentSoft: `
+    bg-accent/10 text-accent
+    hover:bg-accent hover:text-white
+  `,
+
+    accentLight: `
+    bg-[#FFF1E8] text-accent
+    hover:bg-accent hover:text-white
+  `,
+
     white: `
-      bg-white text-dark
-      hover:bg-dark15 hover:text-dark
-    `,
+    bg-white text-dark
+    hover:bg-dark15 hover:text-dark
+  `,
+
     outline: `
-      border border-dark40 bg-transparent text-dark
-      hover:border-accent hover:text-accent
-    `,
+    border border-dark40 bg-transparent text-dark
+    hover:border-accent hover:text-accent
+  `,
+
+    outlineAccent: `
+    border border-accent bg-transparent text-accent
+    hover:bg-accent hover:text-white
+  `,
+
     dark: `
-      bg-dark text-white
-      hover:bg-accent hover:text-white
-    `,
+    bg-dark text-white
+    hover:bg-accent hover:text-white
+  `,
+
+    gray: `
+    bg-dark15 text-dark
+    hover:bg-dark hover:text-white
+  `,
+
     ghost: `
-      bg-dark10 text-dark
-      hover:bg-dark15
-    `,
+    bg-dark10 text-dark
+    hover:bg-dark15
+  `,
+
+    glass: `
+    bg-white/15 text-white backdrop-blur-sm
+    border border-white/20
+    hover:bg-white hover:text-dark
+  `,
+
+    glassAccent: `
+    bg-accent/90 text-white backdrop-blur-sm
+    border border-white/20
+    hover:bg-white hover:text-accent
+  `,
   };
 
   const sizes = {
     sm: "h-10 px-5 text-sm rounded-4xl",
-    md: "h-12 px-auto sm:px-7 text-base rounded-4xl",
+    md: "h-12 px-6 sm:px-7 text-base rounded-4xl",
     lg: "h-14 px-8 text-base rounded-4xl",
     icon: "h-12 w-12 rounded-full",
   };
@@ -90,7 +126,6 @@ const Button = ({
       {icon && iconPosition === "left" ? (
         <img src={iconUrl} alt={iconAlt} className={iconClassName} />
       ) : null}
-
 
       <span className="min-w-0 truncate">
         {isLoading ? "Загрузка..." : content}

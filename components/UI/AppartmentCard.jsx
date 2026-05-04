@@ -155,9 +155,6 @@ const ApartmentCardGrid = ({
 
         <ApartmentPrice price={price} priceSqm={priceSqm} />
 
-        <p className="text-xs text-start text-dark80 bg-white/70 px-2 py-1 rounded-lg">
-          *Ипотека рассчитывается индивидуально
-        </p>
       </header>
 
       <div className="grid h-full content-between">
@@ -179,7 +176,7 @@ const ApartmentCardGrid = ({
         <ApartmentAmenitiesSlider amenities={amenities} className=""/>
 
         <div className="mt-5">
-          <Button text="Подробнее" size="sm" variant="outline" fullWidth />
+          <Button text="Подробнее" size="sm" variant="outlineAccent" fullWidth />
         </div>
       </div>
     </article>

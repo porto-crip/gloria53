@@ -1,240 +1,163 @@
-'use client'
+"use client";
+import { useEffect, useRef, useState } from "react";
+import { ChevronRight } from "@/icons/ChevronRight";
+import { CheckMark } from "@/icons/CheckMark";
 
-import { useEffect, useRef, useState } from 'react'
-
-const DEFAULT_OPTIONS = [
-  {
-    label: 'Дешевле',
-    value: 'price-asc',
-  },
-  {
-    label: 'Дороже',
-    value: 'price-desc',
-  },
-  {
-    label: 'С большей площадью',
-    value: 'area-desc',
-  },
-  {
-    label: 'С меньшей площадью',
-    value: 'area-asc',
-  },
-]
-
-const SortDropdown = ({
-  text = 'Сортировка',
-  iconLink = '/chevron-arrow.svg',
-  iconAlt = '',
-  options = DEFAULT_OPTIONS,
-  value,
-  onChange,
-  className = '',
-}) => {
-  const dropdownRef = useRef(null)
-  const [isOpen, setIsOpen] = useState(false)
-  const [localValue, setLocalValue] = useState(value || options[0]?.value)
-
-  const currentValue = value ?? localValue
-
-  const selectedOption =
-    options.find((option) => option.value === currentValue) || null
-
-  const buttonText = selectedOption?.label || text
-
-  const closeDropdown = () => {
-    setIsOpen(false)
-  }
-
-  const toggleDropdown = () => {
-    setIsOpen((prev) => !prev)
-  }
-
-  const selectOption = (option) => {
-    setLocalValue(option.value)
-    onChange?.(option.value)
-    closeDropdown()
-  }
+const buttonIcon = ({ text, iconLink, iconAlt, isOpen = false }) => {
+  const [isOpenList, setIsOpenList] = useState(false);
+  const [isPressedParam, setIsPressedParam] = useState(null);
+  const [paramSort, setParamSort] = useState([
+    "Дешевле",
+    "Дороже",
+    "С большей площадью",
+    "С маленькой площадью",
+  ]);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target)
-      ) {
-        closeDropdown()
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setIsOpenList(false);
       }
-    }
-
-    const handleEscape = (event) => {
-      if (event.key === 'Escape') {
-        closeDropdown()
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    document.addEventListener('keydown', handleEscape)
-
+    };
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-      document.removeEventListener('keydown', handleEscape)
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const openDropdownList = () => {
+    setIsOpenList(!isOpenList);
+  };
+
+  const statusParam = (indexParam) => {
+    setIsPressedParam(isPressedParam === indexParam ? null : indexParam);
+    if (isPressedParam === indexParam) {
+      return;
     }
-  }, [])
+
+    setIsOpenList(!isOpenList);
+  };
 
   return (
-    <div ref={dropdownRef} className={`relative ${className}`}>
+    <div className="relative" ref={dropdownRef}>
       <button
-        type="button"
-        onClick={toggleDropdown}
-        aria-haspopup="listbox"
-        aria-expanded={isOpen}
+        onClick={openDropdownList}
         className={`
-          flex h-12 min-w-[220px] items-center justify-between gap-4
-          rounded-4xl border border-dark40 bg-white px-5
-          text-sm font-medium text-dark
-          transition
+          flex h-12 min-w-auto sm:min-w-[220px] items-center
+          justify-between gap-4 rounded-4xl
+          border border-dark40 bg-white
+          px-5 text-dark transition
           hover:border-accent hover:text-accent
-          active:scale-[0.98]
+          active:scale-[0.99]
         `}
       >
-        <span className="truncate">{buttonText}</span>
-
-        <img
-          src={iconLink}
-          alt={iconAlt}
-          className={`
-            h-5 w-5 shrink-0 transition-transform duration-200
-            ${isOpen ? '-rotate-90' : 'rotate-90'}
-          `}
-        />
+        {isPressedParam !== null ? paramSort[isPressedParam] : text}
+        <ChevronRight className={`inline ${isOpenList ? "rotate-180" : null } transition duration-300 ease-in-out w-5 h-5`}/>
       </button>
 
-      {/* Desktop dropdown */}
+      {/* Десктопная версия - выпадающий список */}
       <div
         className={`
-          absolute left-0 top-full z-50 mt-3 hidden w-[280px]
-          overflow-hidden rounded-4xl border border-dark40 bg-white p-2 shadow-xl
-          transition-all duration-200 sm:block
-          ${
-            isOpen
-              ? 'pointer-events-auto translate-y-0 opacity-100'
-              : 'pointer-events-none -translate-y-2 opacity-0'
-          }
-        `}
+        p-2 absolute z-20 mt-4
+      bg-white w-70 border border-dark40
+        rounded-4xl transform transition-all
+        duration-300 ease-in-out
+        hidden sm:block  shadow-lg
+        ${isOpenList ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none"}
+    `}
       >
-        <div role="listbox" aria-label="Сортировка">
-          {options.map((option) => {
-            const isSelected = option.value === currentValue
-
-            return (
-              <button
-                key={option.value}
-                type="button"
-                role="option"
-                aria-selected={isSelected}
-                onClick={() => selectOption(option)}
-                className={`
-                  flex w-full items-center justify-between gap-4
-                  rounded-3xl px-4 py-3 text-left text-sm transition
-                  ${
-                    isSelected
-                      ? 'bg-accent text-white'
-                      : 'bg-white text-dark hover:bg-dark10'
-                  }
-                `}
-              >
-                <span>{option.label}</span>
-
-                {isSelected ? (
-                  <svg
-                    className="h-5 w-5 shrink-0"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                ) : null}
-              </button>
-            )
-          })}
-        </div>
+        {paramSort.map((text, index) => (
+          <div
+            key={index}
+            className={`
+              flex w-full items-center justify-between
+              gap-4 rounded-3xl px-4 py-3
+              text-left text-sm transition
+                ${isPressedParam === index ? "bg-accent text-white" : "bg-white text-dark hover:bg-dark10"}
+                ${isPressedParam === index && index === 0 ? "rounded-t-4xl" : ""}
+                ${isPressedParam === index && index === paramSort.length - 1 ? "rounded-b-4xl" : ""}
+              `}
+            onClick={() => statusParam(index)}
+          >
+            <span
+              className={`inline-flex justify-between ${isPressedParam === index ? "text-white" : "text-dark"}`}
+            >
+              {text}
+            </span>
+            {isPressedParam === index && (
+              <CheckMark className="w-5 h-5"/>
+            )}
+          </div>
+        ))}
       </div>
 
-      {/* Mobile overlay */}
-      {isOpen ? (
-        <button
-          type="button"
-          className="fixed inset-0 z-40 bg-black/40 sm:hidden"
-          onClick={closeDropdown}
-          aria-label="Закрыть сортировку"
-        />
-      ) : null}
-
-      {/* Mobile bottom sheet */}
+      {/* Мобильная версия - модальное окно снизу */}
       <div
         className={`
-          fixed bottom-0 left-0 right-0 z-50 sm:hidden
-          overflow-hidden rounded-t-4xl bg-white shadow-xl
-          transition-transform duration-300
-          ${isOpen ? 'translate-y-0' : 'translate-y-full'}
-        `}
+        fixed sm:hidden
+        bottom-0 left-0 right-0
+        z-100
+        transform transition-transform duration-300 ease-in-out
+        ${isOpenList ? "translate-y-0" : "translate-y-full"}
+    `}
       >
-        <div className="flex items-center justify-between border-b border-dark10 px-5 py-4">
-          <div>
-            <p className="text-base font-medium text-dark">
+        {/* Заголовок модального окна */}
+        <div className="bg-white rounded-t-3xl border-t border-dark20 shadow-lg">
+          <div className="flex justify-between items-center p-4 border-b border-dark10">
+            <span className="text-lg font-medium text-dark">
               Сортировать по
-            </p>
-            <p className="mt-1 text-sm text-dark50">
-              Выберите порядок показа квартир
-            </p>
+            </span>
+            <button
+              onClick={openDropdownList}
+              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-dark5"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
           </div>
 
-          <button
-            type="button"
-            onClick={closeDropdown}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-dark10 text-2xl leading-none text-dark transition active:scale-[0.98]"
-            aria-label="Закрыть"
-          >
-            ×
-          </button>
-        </div>
-
-        <div className="max-h-[60vh] overflow-y-auto p-2">
-          {options.map((option) => {
-            const isSelected = option.value === currentValue
-
-            return (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => selectOption(option)}
+          {/* Список опций */}
+          <div className="max-h-[60vh] overflow-y-auto">
+            {paramSort.map((text, index) => (
+              <div
+                key={index}
                 className={`
-                  flex w-full items-center justify-between gap-4
-                  rounded-3xl px-4 py-4 text-left text-sm transition
-                  ${
-                    isSelected
-                      ? 'bg-accent text-white'
-                      : 'bg-white text-dark active:bg-dark10'
-                  }
-                `}
+                            flex justify-between items-center 
+                            py-4 px-6 cursor-pointer
+                            transition-colors duration-200
+                            active:bg-dark10
+                            ${isPressedParam === index ? "bg-accent text-white" : "bg-white text-dark"}
+                            ${index !== paramSort.length - 1 ? "border-b border-dark10" : ""}
+                        `}
+                onClick={() => statusParam(index)}
               >
-                <span className={isSelected ? 'font-medium' : ''}>
-                  {option.label}
+                <span
+                  className={
+                    isPressedParam === index
+                      ? "text-white font-medium"
+                      : "text-dark"
+                  }
+                >
+                  {text}
                 </span>
-
-                {isSelected ? (
+                {isPressedParam === index && (
                   <svg
-                    className="h-5 w-5 shrink-0"
+                    className="w-5 h-5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    aria-hidden="true"
                   >
                     <path
                       strokeLinecap="round"
@@ -243,24 +166,32 @@ const SortDropdown = ({
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
-                ) : null}
-              </button>
-            )
-          })}
-        </div>
+                )}
+              </div>
+            ))}
+          </div>
 
-        <div className="border-t border-dark10 p-4">
-          <button
-            type="button"
-            onClick={closeDropdown}
-            className="h-11 w-full rounded-4xl bg-dark10 text-sm font-medium text-dark transition active:scale-[0.98]"
-          >
-            Отмена
-          </button>
+          {/* Кнопка отмены */}
+          <div className="p-4 border-t border-dark10">
+            <button
+              onClick={openDropdownList}
+              className="w-full py-3 text-center text-dark60 hover:text-dark transition-colors"
+            >
+              Отмена
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  )
-}
 
-export default SortDropdown
+      {/* Затемнение фона для мобильной версии */}
+      {isOpenList && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 sm:hidden transition-opacity duration-300"
+          onClick={openDropdownList}
+        />
+      )}
+    </div>
+  );
+};
+
+export default buttonIcon;
