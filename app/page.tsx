@@ -4,7 +4,7 @@ import CardComplex from "@/components/UI/CardComplex";
 import NewsModule from "@/components/News/NewsModule/page";
 export default function Home() {
   return (
-    <main className="min-h-screen pb-20">
+    <main className="min-h-screen">
       <section className="container-padding section-sm">
         <div className="grid gap-6 lg:grid-cols-2">
           <PromoCard

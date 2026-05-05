@@ -53,7 +53,7 @@ const CardNews = ({
 
             <section className=" px-4 flex gap-3 h-10 w-30 items-center justify-center rounded-full bg-white transition group-hover:bg-accent group-hover:text-white">
             <span className="text-sm font-medium text-accent group-hover:text-white duration-300">Читать</span>
-              <ArrowRight className="text-dark/70 group-hover:text-white h-5.5 w-5.5 group-hover:translate-x-px transition duration-300"/>
+              <ArrowRight className="text-dark/50 group-hover:text-white h-4.5 w-4.5 group-hover:translate-x-px transition duration-300"/>
             </section>
           </div>
         </div>
