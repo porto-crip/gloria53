@@ -128,11 +128,11 @@ markerElement.innerHTML = `
 
       <div>
         <img
-          className="absolute right-0 w-full lg:w-[360px] h-full brightness-50 object-cover"
-          src="https://ngloriya.su/images/homes/19/constructed1-sm.jpg"
+          className="absolute right-0 w-full lg:w-[360px] h-full brightness-75 object-cover"
+          src={selectedObject.image}
           alt="material-brick"
         />
-        <aside className="grid relative h-full content-between gap-6 p-5 bg-black/20 backdrop-blur-xl sm:p-6 lg:p-7">
+        <aside className="grid relative h-full content-between gap-6 p-5 bg-black/20  sm:p-6 lg:p-7">
           <div>
             {/* <span className="mb-4 inline-flex rounded-4xl bg-accent/10 px-4 py-2 text-sm font-medium text-accent">
             Выбранный объект

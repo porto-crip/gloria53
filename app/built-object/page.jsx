@@ -1,57 +1,49 @@
-import Button from '@/components/UI/Button'
+import Button from "@/components/UI/Button";
 import { formatText } from "@/utils/text-format";
-import BuiltObjectsMap from '@/components/BuiltObject/BuiltObjectsMap'
-import { BUILT_OBJECTS } from '@/data/builtObjects';
+import BuiltObjectsMap from "@/components/BuiltObject/BuiltObjectsMap";
+import { BUILT_OBJECTS } from "@/data/builtObjects";
 
 const STATS = [
   {
-    value: '1999',
-    label: 'год основания',
+    value: "2004",
+    label: "первый объект в архиве",
   },
   {
-    value: '2004',
-    label: 'первый объект в архиве',
+    value: "20+",
+    label: "построенных объектов",
   },
   {
-    value: '20+',
-    label: 'построенных объектов',
+    value: "215 тыс. м²",
+    label: "введённого жилья",
   },
-  {
-    value: '215 тыс. м²',
-    label: 'введённого жилья',
-  },
-]
-
-const YEARS = ['2020', '2019', '2018', '2016', '2015', '2012', '2010', '2009', '2007', '2004']
+];
 
 const StatCard = ({ value, label }) => {
   return (
-    <div className="rounded-4xl bg-white/10 p-5 backdrop-blur-sm">
-      <p className="text-3xl font-medium text-white sm:text-4xl">
+    <div className="rounded-4xl bg-white/10 xl:bg-dark/10 p-5 backdrop-blur-sm">
+      <p className="text-3xl font-medium text-white xl:text-dark sm:text-4xl">
         {value}
       </p>
 
-      <p className="mt-2 text-sm text-white/70">
-        {label}
-      </p>
+      <p className="mt-2 text-sm text-white/70 xl:text-dark/70">{label}</p>
     </div>
-  )
-}
+  );
+};
 
-const BuiltObjectPreview = ({ object, index }) => {
-  const isReversed = index % 2 !== 0
-
+const BuiltObjectPreview = ({ object }) => {
   return (
-    <article className={`grid relative overflow-hidden rounded-2xl min-h-[400px] lg:min-h-[500px]`}>
-        <img
-          src={object.image}
-          alt={object.title}
-          className="absolute inset-0 -z-10 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-        />
+    <article
+      className={`grid relative overflow-hidden rounded-2xl min-h-[400px] lg:min-h-[500px]`}
+    >
+      <img
+        src={object.image}
+        alt={object.title}
+        className="absolute inset-0 -z-10 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+      />
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/40 lg:via-black/20 to-black/50" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/40 lg:via-black/20 to-black/50" />
 
-        {/* <span className="absolute mx-4 my-4 text-accent rounded-4xl bg-white px-4 py-2 text-sm font-medium backdrop-blur-sm">
+      {/* <span className="absolute mx-4 my-4 text-accent rounded-4xl bg-white px-4 py-2 text-sm font-medium backdrop-blur-sm">
           {object.year}
         </span> */}
 
@@ -73,7 +65,9 @@ const BuiltObjectPreview = ({ object, index }) => {
         <div className="flex items-center justify-between gap-4 border-t border-dark/10 pt-5">
           <div>
             <p className="text-sm text-white">Год сдачи</p>
-            <p className="mt-1 text-base sm:text-lg lg:text-xl font-medium text-white">{object.year}</p>
+            <p className="mt-1 text-base sm:text-lg lg:text-xl font-medium text-white">
+              {object.year}
+            </p>
           </div>
 
           <Button
@@ -87,44 +81,44 @@ const BuiltObjectPreview = ({ object, index }) => {
             text="Подробнее"
             variant="white"
             size="sm"
-            className="block lg:hidden"/>
+            className="block lg:hidden"
+          />
         </div>
       </div>
     </article>
-  )
-}
+  );
+};
 
 const BuiltObjectsPage = () => {
   return (
     <main>
       <section className="container-padding section">
-        <div className="relative overflow-hidden rounded-4xl bg-header content-center min-h-[350px]">
+        <div className="relative overflow-hidden rounded-4xl xl:grid xl:grid-cols-2 xl:gap-12">
+          {/* Фоновая картинка для мобильных и планшетов */}
           <img
-            src="https://ngloriya.su/images/homes/18/constructed1-sm.jpg"
-            alt="Построенные объекты компании Глория"
-            className="absolute inset-0 h-full w-full object-cover opacity-35"
+            src="https://ngloriya.su/images/homes/19/constructed1-sm.jpg"
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover xl:hidden"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/20" />
+          {/* Затемнение фона на мобильных */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/25 xl:hidden" />
 
-          <div className="relative z-10 grid gap-10 p-6 text-white sm:p-8 lg:grid-cols-[1fr_0.9fr] lg:items-start lg:p-10">
+          <div className="relative z-10 grid gap-10 p-5 text-white sm:p-7 xl:content-center xl:p-0 xl:text-dark">
             <div className="max-w-4xl">
-              {/* <span className="mb-4 inline-flex rounded-4xl bg-accent px-4 py-2 text-sm font-medium text-white">
-                Построенные объекты
-              </span> */}
-
-              <h1 className="text-2xl mt-3 lg:text-3xl font-medium sm:text-5xl">
+              <h1 className="mt-3 text-3xl font-medium leading-tight sm:text-5xl lg:text-5xl xl:text-3xl">
                 Дома, которые уже стали частью города
               </h1>
 
-              <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/80 sm:text-base lg:text-lg">
+              <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/80 lg:text-lg xl:text-dark/80">
                 Здесь собраны построенные объекты компании «Глория» за разные
                 годы работы. Это не просто список адресов, а история домов,
                 которые уже сданы и используются жителями.
               </p>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2">
+            <div className="grid gap-3">
               {STATS.map((stat) => (
                 <StatCard
                   key={stat.label}
@@ -132,6 +126,52 @@ const BuiltObjectsPage = () => {
                   label={stat.label}
                 />
               ))}
+            </div>
+
+            {/* Бейдж на мобильных поверх фоновой картинки */}
+            <div className="rounded-4xl bg-white/10 p-5 text-white shadow-2xl backdrop-blur-2xl xl:hidden">
+              <div className="mb-3 flex flex-wrap gap-1">
+                <span className="inline-flex rounded-full bg-white px-3 py-1 text-xs font-medium text-dark">
+                  Первый построенный объект
+                </span>
+
+                <span className="inline-flex rounded-full bg-white px-3 py-1 text-xs font-medium text-dark">
+                  2004
+                </span>
+              </div>
+
+              <p className="text-xl font-medium leading-tight">
+                ул. Парковая, д. 3, корп. 1 и 2
+              </p>
+            </div>
+          </div>
+
+          {/* Правая картинка только на desktop */}
+          <div className="group relative hidden min-h-[420px] overflow-hidden rounded-4xl xl:block">
+            <img
+              src="https://ngloriya.su/images/homes/19/constructed1-sm.jpg"
+              alt="Первый построенный объект компании Глория"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
+
+            <div className="absolute bottom-5 left-5 right-5">
+              <div className="rounded-4xl bg-white/25 p-5 text-white shadow-2xl backdrop-blur-2xl">
+                <div className="mb-3 flex flex-wrap gap-1">
+                  <span className="inline-flex rounded-full bg-white px-3 py-1 text-xs font-medium text-dark">
+                    Первый построенный объект
+                  </span>
+
+                  <span className="inline-flex rounded-full bg-white px-3 py-1 text-xs font-medium text-dark">
+                    2004
+                  </span>
+                </div>
+
+                <p className="text-xl font-medium leading-tight">
+                  ул. Парковая, д. 3, корп. 1 и 2
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -155,15 +195,14 @@ const BuiltObjectsPage = () => {
 
       <section className="container-padding section">
         <div className="mb-12 grid lg:grid-cols-2 lg:gap-5">
-
           <h2 className="text-2xl lg:text-3xl font-medium leading-tight text-dark sm:text-4xl">
             Построенные дома по годам
           </h2>
 
           <p className="mt-4 text-base leading-relaxed text-dark60">
-            Я сделал страницу не в формате обычной сетки, а в виде крупных
-            карточек. Так каждый объект воспринимается отдельно и выглядит
-            значимее.
+            За годы работы компания «Глория» построила десятки жилых домов
+            в&nbsp;Великом&nbsp;Новгороде. Эти объекты стали домом для многих
+            семей.
           </p>
         </div>
 
@@ -176,13 +215,11 @@ const BuiltObjectsPage = () => {
         </div>
       </section>
 
-      
-
-      <section className='container-padding section'>
+      <section className="container-padding section">
         <div className="mb-12 grid lg:grid-cols-[1fr_1.5fr] items-start gap-6 lg:gap-32">
-
           <h2 className="text-2xl lg:text-3xl font-medium leading-tight text-dark sm:text-4xl">
-            Объекты компании расположены в разных районах Великого&nbsp;Новгорода
+            Объекты компании расположены в разных районах
+            Великого&nbsp;Новгорода
           </h2>
 
           <p className=" text-base leading-relaxed text-dark60">
@@ -229,7 +266,7 @@ const BuiltObjectsPage = () => {
         </div>
       </section> */}
     </main>
-  )
-}
+  );
+};
 
-export default BuiltObjectsPage
+export default BuiltObjectsPage;
