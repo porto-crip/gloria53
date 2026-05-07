@@ -99,7 +99,7 @@ const AboutPage = () => {
             </div>
           </div>
 
-          <div className="relative min-h-[420px] overflow-hidden bg-transparent sm:min-h-[520px]">
+          <div className="relative min-h-[420px] overflow-hidden bg-transparent sm:min-h-[520px] hidden lg:block">
             <img
               src="/logo-active.jpg"
               alt="Строительная компания Глория"
@@ -259,13 +259,15 @@ const AboutPage = () => {
         {/* Mobile / Tablet до 1024px */}
         <div className="relative overflow-hidden rounded-4xl bg-dark10 lg:hidden">
           <img
-            src="/images/material.jpg"
-            alt=""
+            src="/images/material-brick.png"
+            alt="материал"
             className="absolute inset-0 h-full w-full object-cover object-bottom"
             aria-hidden="true"
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/15 via-black/25 to-black/15" />
+
+          <div className="absolute  inset-0 bg-gradient-to-t from-black/85 via-black/55 to-black/20" />
 
           <div className="relative z-10 grid min-h-[520px] content-end gap-7 p-6 sm:min-h-[560px] sm:p-8">
             <div>
@@ -373,92 +375,150 @@ const AboutPage = () => {
         </div>
       </section>
 
+      <section className="container-padding section">
+        <div className="rounded-4xl bg-dark10 p-6 sm:p-8 lg:p-10">
+          <div className="mb-8 max-w-3xl">
+            {/* <span className="mb-4 inline-flex rounded-4xl bg-accent/10 px-4 py-2 text-sm font-medium text-accent">
+        Детальная информация
+      </span> */}
+
+            <h2 className="text-3xl font-medium leading-tight text-dark sm:text-4xl">
+              Состав строительной компании «Глория»
+            </h2>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-3">
+            <article className="rounded-4xl bg-white p-5 shadow-sm sm:p-6">
+              <p className="mb-3 text-sm font-medium text-accent">
+                Заказчик-застройщик
+              </p>
+
+              <h3 className="text-xl font-medium text-dark">ООО «Глория»</h3>
+
+              <p className="mt-4 text-sm leading-relaxed text-dark60">
+                Свидетельство СРО № 0275.01-2010-5321072550-С-070 от 11.10.2010
+                г.
+              </p>
+            </article>
+
+            <article className="rounded-4xl bg-white p-5 shadow-sm sm:p-6">
+              <p className="mb-3 text-sm font-medium text-accent">
+                Проектная организация
+              </p>
+
+              <h3 className="text-xl font-medium text-dark">
+                ООО «Глория Проект»
+              </h3>
+
+              <p className="mt-4 text-sm leading-relaxed text-dark60">
+                Свидетельство СРО № СРО-П-056-16112009-0120 от 25.11.2010 г.
+              </p>
+            </article>
+
+            <article className="rounded-4xl bg-header p-5 text-white shadow-sm sm:p-6">
+              <p className="mb-3 text-sm font-medium text-white/70">
+                Директор компании
+              </p>
+
+              <h3 className="text-xl font-medium">
+                Соловьев Сергей Дмитриевич
+              </h3>
+
+              <p className="mt-4 text-sm leading-relaxed text-white/70">
+                Руководит строительной компанией «Глория».
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section className="container-padding section pb-16 pt-8 mb-24">
-  <div className="relative min-h-[420px] overflow-hidden rounded-4xl bg-dark">
-    <img
-      src="/about/family-home.jpg"
-      alt="Семья в новой квартире"
-      className="absolute inset-0 h-full w-full object-cover"
-    />
-
-    <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/10" />
-
-    <div className="relative z-10 grid min-h-[420px] gap-8 p-6 text-white sm:p-8 lg:grid-cols-[1fr_0.75fr] lg:items-center lg:p-10">
-      <div className="max-w-3xl">
-        <span className="mb-4 inline-flex rounded-4xl bg-white/15 px-4 py-2 text-sm text-white/90 backdrop-blur-sm">
-          Заинтересованы в приобретении жилья?
-        </span>
-
-        <h2 className="text-3xl font-medium leading-tight sm:text-4xl lg:text-5xl">
-          Подберите квартиру, которая подойдёт именно вам
-        </h2>
-
-        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/90 sm:text-base">
-          В каталоге можно посмотреть планировки, выбрать параметры и оставить
-          заявку. Менеджер поможет уточнить детали и условия покупки.
-        </p>
-
-        <div className="mt-7 flex flex-wrap gap-3">
-          <Button
-            text="Смотреть квартиры"
-            variant="white"
-            size="md"
-            linkToPage="/apartments"
+        <div className="relative min-h-[420px] overflow-hidden rounded-4xl bg-dark">
+          <img
+            src="/images/material-brick.png"
+            alt="Семья в новой квартире"
+            className="absolute inset-0 h-full w-full object-cover"
           />
 
-          <Button
-            text="Связаться"
-            variant="glass"
-            size="md"
-            linkToPage="/contacts"
-          />
-        </div>
-      </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/45 to-black/10" />
 
-      <div className="hidden rounded-4xl border border-white/10 bg-white/12 p-6 backdrop-blur-sm lg:block">
-        <div className="mb-5">
-          <p className="text-lg font-medium text-white">
-            Как это работает
-          </p>
+          <div className="relative z-10 grid min-h-[420px] gap-8 p-6 text-white sm:p-8 lg:grid-cols-[1fr_0.75fr] lg:items-center lg:p-10">
+            <div className="max-w-3xl">
+              <span className="mb-4 inline-flex rounded-4xl bg-white/15 px-4 py-2 text-sm text-white/90 backdrop-blur-sm">
+                Заинтересованы в приобретении жилья?
+              </span>
 
-          <div className="mt-3 h-1 w-14 rounded-full bg-accent" />
-        </div>
+              <h2 className="text-3xl font-medium leading-tight sm:text-4xl lg:text-5xl">
+                Подберите квартиру, которая подойдёт именно вам
+              </h2>
 
-        <div className="grid gap-4">
-          <div className="flex gap-3 items-center">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-medium text-white">
-              1
-            </span>
+              <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/90 sm:text-base">
+                В каталоге можно посмотреть планировки, выбрать параметры и
+                оставить заявку. Менеджер поможет уточнить детали и условия
+                покупки.
+              </p>
 
-            <p className="text-sm leading-relaxed text-white/80">
-              Вы выбираете квартиру в каталоге.
-            </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Button
+                  text="Смотреть квартиры"
+                  variant="white"
+                  size="md"
+                  linkToPage="/apartments"
+                />
+
+                <Button
+                  text="Связаться"
+                  variant="glass"
+                  size="md"
+                  linkToPage="/contacts"
+                />
+              </div>
+            </div>
+
+            <div className="hidden rounded-4xl border border-white/10 bg-white/12 p-6 backdrop-blur-sm lg:block">
+              <div className="mb-5">
+                <p className="text-lg font-medium text-white">
+                  Как это работает
+                </p>
+
+                <div className="mt-3 h-1 w-14 rounded-full bg-accent" />
+              </div>
+
+              <div className="grid gap-4">
+                <div className="flex gap-3 items-center">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-medium text-white">
+                    1
+                  </span>
+
+                  <p className="text-sm leading-relaxed text-white/80">
+                    Вы выбираете квартиру в каталоге.
+                  </p>
+                </div>
+
+                <div className="flex gap-3 items-center">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-medium text-white">
+                    2
+                  </span>
+
+                  <p className="text-sm leading-relaxed text-white/80">
+                    Оставляете заявку или связываетесь с отделом продаж.
+                  </p>
+                </div>
+
+                <div className="flex gap-3 items-center">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-medium text-white">
+                    3
+                  </span>
+
+                  <p className="text-sm leading-relaxed text-white/80">
+                    Менеджер помогает уточнить детали покупки.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <div className="flex gap-3 items-center">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-medium text-white">
-              2
-            </span>
-
-            <p className="text-sm leading-relaxed text-white/80">
-              Оставляете заявку или связываетесь с отделом продаж.
-            </p>
-          </div>
-
-          <div className="flex gap-3 items-center">
-            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-sm font-medium text-white">
-              3
-            </span>
-
-            <p className="text-sm leading-relaxed text-white/80">
-              Менеджер помогает уточнить детали покупки.
-            </p>
-          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
     </main>
   );
 };

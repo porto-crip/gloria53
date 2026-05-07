@@ -16,7 +16,8 @@ const NAV_LINKS = [
   },
   {
     label: 'Построенные объекты',
-    href: '#',
+        href: '/built-object',
+
   },
   {
     label: 'Новости',
@@ -25,7 +26,7 @@ const NAV_LINKS = [
   {
     label: 'О компании',
     href: '/about',
-  },
+  }
 ]
 
 const CONTACTS = {

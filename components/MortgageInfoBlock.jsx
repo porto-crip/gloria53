@@ -26,7 +26,7 @@ const MortgageInfoBannerMini = () => {
           <div className="shrink-0">
             <Button
               text="Узнать условия"
-              size="md"
+              size="sm"
               variant="white"
             />
           </div>

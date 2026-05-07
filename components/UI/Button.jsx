@@ -83,7 +83,7 @@ const Button = ({
   };
 
   const sizes = {
-    sm: "h-10 px-5 text-sm rounded-4xl",
+    sm: "h-8 md:h-10 px-3 md:px-5 text-xs md:text-sm rounded-4xl",
     md: "h-12 px-6 sm:px-7 text-base rounded-4xl",
     lg: "h-14 px-8 text-base rounded-4xl",
     icon: "h-12 w-12 rounded-full",

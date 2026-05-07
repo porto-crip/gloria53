@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from 'next/script';
 import Roboto from 'next/font/local';
 import "./globals.css";
 import HeaderWrapper from "@/components/HeaderWrapper";
@@ -42,6 +43,10 @@ export default function RootLayout({
       <body
         className={`${roboto.className} antialiased`}
       >
+      <Script
+  src={`https://api-maps.yandex.ru/v3/?apikey=${process.env.NEXT_PUBLIC_YANDEX_MAPS_API_KEY}&lang=ru_RU`}
+  strategy="afterInteractive"
+/>
 <HeaderWrapper />
         {children}
         <Footer/>

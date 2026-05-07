@@ -24,7 +24,7 @@ const CardNews = ({
           <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/5 to-transparent opacity-80" />
 
           <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-            <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-dark backdrop-blur">
+            <span className="rounded-full bg-[#f26c18] px-3 py-1 text-xs font-medium text-white backdrop-blur">
               {category}
             </span>
 
@@ -36,7 +36,7 @@ const CardNews = ({
 
         <div className="grid gap-12 sm:gap-4 p-5 sm:p-6">
           <div className="grid gap-3">
-            <h3 className={`line-clamp-2 text-xl font-medium leading-tight text-dark transition group-hover:text-accent ${styles.titleTruncate}`}>
+            <h3 className={`line-clamp-2 text-xl font-medium leading-tight text-dark transition group-hover:text-accent min-h-[3.5rem] ${styles.titleTruncate}`}>
               {title}
             </h3>
 
