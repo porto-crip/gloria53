@@ -1,6 +1,7 @@
 import Button from "@/components/UI/Button";
 import { formatText } from "@/utils/text-format";
 import BuiltObjectsMap from "@/components/BuiltObject/BuiltObjectsMap";
+import BuiltObjectGallery from "@/components/BuiltObject/BuiltObjectGallery";
 import { BUILT_OBJECTS } from "@/data/builtObjects";
 
 const STATS = [
@@ -36,7 +37,7 @@ const BuiltObjectPreview = ({ object }) => {
       className={`grid relative overflow-hidden rounded-2xl min-h-[400px] lg:min-h-[500px]`}
     >
       <img
-        src={object.image}
+        src={object.images[0]}
         alt={object.title}
         className="absolute inset-0 -z-10 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
       />
@@ -53,36 +54,31 @@ const BuiltObjectPreview = ({ object }) => {
             Построенный объект
           </span> */}
 
-          <h2 className="text-xl font-medium text-white sm:text-3xl md:text-4xl">
+          <h2 className="text-xl font-medium text-white sm:text-3xl md:text-3xl">
             {object.title}
           </h2>
 
-          <p className="mt-2 lg:mt-5 max-w-xl text-sm sm:text-base leading-relaxed text-white">
-            {object.description}
-          </p>
         </div>
 
         <div className="flex items-center justify-between gap-4 border-t border-dark/10 pt-5">
           <div>
-            <p className="text-sm text-white">Год сдачи</p>
-            <p className="mt-1 text-base sm:text-lg lg:text-xl font-medium text-white">
+            <p className="text-sm lg:text-base text-white">Год сдачи</p>
+            <p className="mt-1 text-base sm:text-lg lg:text-2xl font-medium text-white">
               {object.year}
             </p>
           </div>
 
-          <Button
-            text="Подробнее"
-            variant="white"
-            size="md"
-            className="hidden! lg:block!"
-          />
+          <BuiltObjectGallery
+  object={object}
+  size="md"
+  className="hidden! lg:block!"
+/>
 
-          <Button
-            text="Подробнее"
-            variant="white"
-            size="sm"
-            className="block lg:hidden"
-          />
+<BuiltObjectGallery
+  object={object}
+  size="sm"
+  className="block lg:hidden"
+/>
         </div>
       </div>
     </article>
@@ -96,7 +92,7 @@ const BuiltObjectsPage = () => {
         <div className="relative overflow-hidden rounded-4xl xl:grid xl:grid-cols-2 xl:gap-12">
           {/* Фоновая картинка для мобильных и планшетов */}
           <img
-            src="https://ngloriya.su/images/homes/19/constructed1-sm.jpg"
+            src="/builtObjects/parkovaya.jpg"
             alt=""
             aria-hidden="true"
             className="absolute inset-0 h-full w-full object-cover xl:hidden"
@@ -107,8 +103,8 @@ const BuiltObjectsPage = () => {
 
           <div className="relative z-10 grid gap-10 p-5 text-white sm:p-7 xl:content-center xl:p-0 xl:text-dark">
             <div className="max-w-4xl">
-              <h1 className="mt-3 text-3xl font-medium leading-tight sm:text-5xl lg:text-5xl xl:text-3xl">
-                Дома, которые уже стали частью города
+              <h1 className="mt-3 text-3xl font-medium leading-tight sm:text-5xl lg:text-5xl xl:text-4xl">
+                Построенные объекты компании Глория
               </h1>
 
               <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/80 lg:text-lg xl:text-dark/80">
@@ -149,7 +145,7 @@ const BuiltObjectsPage = () => {
           {/* Правая картинка только на desktop */}
           <div className="group relative hidden min-h-[420px] overflow-hidden rounded-4xl xl:block">
             <img
-              src="https://ngloriya.su/images/homes/19/constructed1-sm.jpg"
+              src="/builtObjects/parkovaya.jpg"
               alt="Первый построенный объект компании Глория"
               className="absolute inset-0 h-full w-full object-cover"
             />
@@ -218,15 +214,14 @@ const BuiltObjectsPage = () => {
       <section className="container-padding section">
         <div className="mb-12 grid lg:grid-cols-[1fr_1.5fr] items-start gap-6 lg:gap-32">
           <h2 className="text-2xl lg:text-3xl font-medium leading-tight text-dark sm:text-4xl">
-            Объекты компании расположены в разных районах
-            Великого&nbsp;Новгорода
+            Построенный объекты компании
           </h2>
-
+{/* 
           <p className=" text-base leading-relaxed text-dark60">
             Яx сделал страницу не в формате обычной сетки, а в виде крупных
             карточек. Так каждый объект воспринимается отдельно и выглядит
             значимее.
-          </p>
+          </p> */}
         </div>
 
         <BuiltObjectsMap />

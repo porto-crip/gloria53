@@ -45,17 +45,16 @@ const BuiltObjectsMap = () => {
     map.addChild(new YMapDefaultSchemeLayer());
     map.addChild(new YMapDefaultFeaturesLayer());
 
-    // Добавляем маркеры
+    // маркеры
     BUILT_OBJECTS.forEach((object) => {
       const markerElement = document.createElement("button");
       markerElement.type = "button";
-     markerElement.className = `
+      markerElement.className = `
   group relative flex h-10 w-10 items-center justify-center
   transition-all hover:scale-110 active:scale-95
 `;
 
-markerElement.innerHTML = `
-  <span class="absolute inset-0 rounded-full bg-accent/20 blur-md"></span>
+      markerElement.innerHTML = `
   <span class="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg ring-1 ring-black/5">
     <svg
       viewBox="0 0 32 32"
@@ -126,11 +125,11 @@ markerElement.innerHTML = `
         <div ref={mapRef} className="absolute inset-0" />
       </div>
 
-      <div>
+      <div className="relative">
         <img
           className="absolute right-0 w-full lg:w-[360px] h-full brightness-75 object-cover"
-          src={selectedObject.image}
-          alt="material-brick"
+          src={selectedObject.images[0]}
+          alt="object"
         />
         <aside className="grid relative h-full content-between gap-6 p-5 bg-black/20  sm:p-6 lg:p-7">
           <div>
@@ -142,18 +141,17 @@ markerElement.innerHTML = `
               {selectedObject.title}
             </h3>
 
-            <p className="mt-3 text-sm leading-relaxed text-white">
+            <p className="mt-3 text-base leading-relaxed text-white">
               {selectedObject.complex}
             </p>
-
           </div>
-            <div>
-              <p className="text-md sm:text-lg text-dark50">Год сдачи</p>
+          <div>
+            <p className="text-md sm:text-lg text-white/70">Год сдачи</p>
 
-              <p className="mt-1 text-xl sm:text-2xl font-medium text-white">
-                {selectedObject.year}
-              </p>
-            </div>
+            <p className="mt-1 text-xl sm:text-2xl font-medium text-white">
+              {selectedObject.year}
+            </p>
+          </div>
         </aside>
       </div>
     </div>
