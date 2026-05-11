@@ -173,10 +173,10 @@ const ApartmentCardGrid = ({
           className="justify-center md:justify-start"
         />
 
-        <ApartmentAmenitiesSlider amenities={amenities} className=""/>
+        <ApartmentAmenitiesSlider amenities={amenities} className="" />
 
         <div className="mt-5">
-          <Button text="Подробнее" size="sm" variant="outlineAccent" fullWidth />
+          <Button text="Подробнее" size="sm" variant="outlineAccent" fullWidth linkToPage={`/apartments/${id}`} />
         </div>
       </div>
     </article>
@@ -197,7 +197,7 @@ const ApartmentCardList = ({
   amenities,
 }) => {
   return (
-    <article className="relative grid gap-6 rounded-3xl bg-dark10 p-5 sm:p-6 md:grid-cols-[160px_1.5fr_0.8fr_1fr_auto] md:items-center lg:p-8">
+    <article className="relative grid gap-6 rounded-3xl bg-dark10 p-5 sm:p-6 md:grid-cols-[160px_1.5fr_0.8fr_1fr_auto_auto] md:items-center lg:p-8">
       <div className="flex justify-center md:justify-start">
         <ApartmentImage
           imageUrl={imageUrl}
@@ -226,6 +226,15 @@ const ApartmentCardList = ({
 
       <div className="absolute right-5 top-5 md:static">
         <ApartmentNumber id={id} />
+      </div>
+
+      <div className="hidden md:block">
+        <Button
+          text="Подробнее"
+          size="sm"
+          variant="outlineAccent"
+          linkToPage={`/apartments/${id}`}
+        />
       </div>
 
       <ApartmentMobileDetails
