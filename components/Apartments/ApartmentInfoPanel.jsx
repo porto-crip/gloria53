@@ -105,103 +105,107 @@ const RequestModal = ({ isOpen, onClose, apartment, selectedPurchase }) => {
     <Dialog open={isOpen} onClose={onClose} className="relative z-[120]">
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
 
-      <div className="fixed inset-0 grid place-items-center p-4">
-        <DialogPanel className="relative w-full max-w-xl overflow-hidden rounded-4xl bg-white p-5 shadow-2xl sm:p-7">
-          <button
-            type="button"
-            onClick={onClose}
-            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-dark10 text-dark transition hover:bg-accent hover:text-white"
-            aria-label="Закрыть форму"
-          >
-            <X className="h-5 w-5" />
-          </button>
+      <div className="fixed inset-0 overflow-y-auto p-3 sm:p-5">
+        <div className="flex min-h-full items-end justify-center sm:items-center">
+          <DialogPanel className="relative w-full max-w-xl overflow-hidden rounded-t-4xl bg-white shadow-2xl sm:rounded-4xl">
+            <button
+              type="button"
+              onClick={onClose}
+              className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-dark10 text-dark transition hover:bg-accent hover:text-white"
+              aria-label="Закрыть форму"
+            >
+              <X className="h-5 w-5" />
+            </button>
 
-          <div className="pr-12">
-            <span className="mb-4 inline-flex rounded-full bg-accent/10 px-4 py-2 text-sm font-medium text-accent">
-              Заявка на квартиру
-            </span>
-
-            <DialogTitle className="text-2xl font-medium leading-tight text-dark sm:text-3xl">
-              Оставить контактные данные
-            </DialogTitle>
-
-            <p className="mt-3 text-sm leading-relaxed text-dark/60">
-              Менеджер свяжется с вами, уточнит детали по квартире и выбранному
-              условию покупки.
-            </p>
-          </div>
-
-          <div className="mt-6 rounded-3xl bg-dark10 p-4">
-            <div className="grid gap-3 text-sm">
-              <div className="flex justify-between gap-4">
-                <span className="text-dark/50">Квартира</span>
-                <span className="text-right font-medium text-dark">
-                  №{apartment.id}, {apartmentTitle}
+            <div className="max-h-[calc(100dvh-24px)] overflow-y-auto p-5 sm:max-h-[calc(100dvh-40px)] sm:p-7">
+              <div className="pr-12">
+                <span className="mb-4 inline-flex rounded-full bg-accent/10 px-4 py-2 text-sm font-medium text-accent">
+                  Заявка на квартиру
                 </span>
+
+                <DialogTitle className="text-2xl font-medium leading-tight text-dark sm:text-3xl">
+                  Оставить контактные данные
+                </DialogTitle>
+
+                <p className="mt-3 text-sm leading-relaxed text-dark60">
+                  Менеджер свяжется с вами, уточнит детали по квартире и выбранному
+                  условию покупки.
+                </p>
               </div>
 
-              <div className="flex justify-between gap-4">
-                <span className="text-dark/50">Стоимость</span>
-                <span className="text-right font-medium text-accent">
-                  {formatted(apartment.price)}
-                </span>
+              <div className="mt-6 rounded-3xl bg-dark10 p-4">
+                <div className="grid gap-3 text-sm">
+                  <div className="flex justify-between gap-4">
+                    <span className="text-dark50">Квартира</span>
+                    <span className="text-right font-medium text-dark">
+                      №{apartment.id}, {apartmentTitle}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between gap-4">
+                    <span className="text-dark50">Стоимость</span>
+                    <span className="text-right font-medium text-accent">
+                      {formatted(apartment.price)}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between gap-4">
+                    <span className="text-dark50">Условие покупки</span>
+                    <span className="text-right font-medium text-dark">
+                      {selectedPurchase.title}
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <div className="flex justify-between gap-4">
-                <span className="text-dark/50">Условие покупки</span>
-                <span className="text-right font-medium text-dark">
-                  {selectedPurchase.title}
-                </span>
-              </div>
+              <form className="mt-6 grid gap-3">
+                <label className="grid gap-2">
+                  <span className="text-sm text-dark60">Ваше имя</span>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Иван"
+                    className="h-12 rounded-2xl border border-dark/10 bg-white px-4 text-dark outline-none transition focus:border-accent"
+                  />
+                </label>
+
+                <label className="grid gap-2">
+                  <span className="text-sm text-dark60">Телефон</span>
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="+7 ___ ___-__-__"
+                    className="h-12 rounded-2xl border border-dark/10 bg-white px-4 text-dark outline-none transition focus:border-accent"
+                  />
+                </label>
+
+                <label className="grid gap-2">
+                  <span className="text-sm text-dark60">Комментарий</span>
+                  <textarea
+                    name="comment"
+                    rows={3}
+                    defaultValue={`Интересует квартира №${apartment.id}. Условие покупки: ${selectedPurchase.title}.`}
+                    className="resize-none rounded-2xl border border-dark/10 bg-white px-4 py-3 text-dark outline-none transition focus:border-accent"
+                  />
+                </label>
+
+                <div className="mt-3">
+                  <Button
+                    type="submit"
+                    text="Отправить заявку"
+                    variant="accent"
+                    size="md"
+                    fullWidth
+                  />
+                </div>
+
+                <p className="text-center text-xs leading-relaxed text-dark50">
+                  Нажимая кнопку, вы соглашаетесь на обработку контактных данных.
+                </p>
+              </form>
             </div>
-          </div>
-
-          <form className="mt-6 grid gap-3">
-            <label className="grid gap-2">
-              <span className="text-sm text-dark">Ваше имя</span>
-              <input
-                type="text"
-                name="name"
-                placeholder="Иван"
-                className="h-12 rounded-2xl border border-dark/10 bg-white px-4 text-dark outline-none transition focus:border-accent"
-              />
-            </label>
-
-            <label className="grid gap-2">
-              <span className="text-sm text-dark">Телефон</span>
-              <input
-                type="tel"
-                name="phone"
-                placeholder="+7 ___ ___-__-__"
-                className="h-12 rounded-2xl border border-dark/10 bg-white px-4 text-dark outline-none transition focus:border-accent"
-              />
-            </label>
-
-            <label className="grid gap-2">
-              <span className="text-sm text-dark">Комментарий</span>
-              <textarea
-                name="comment"
-                rows={4}
-                defaultValue={`Интересует квартира №${apartment.id}. Условие покупки: ${selectedPurchase.title}.`}
-                className="resize-none rounded-2xl border border-dark/10 bg-white px-4 py-3 text-dark outline-none transition focus:border-accent"
-              />
-            </label>
-
-            <div className="mt-3">
-              <Button
-                type="submit"
-                text="Отправить заявку"
-                variant="accent"
-                size="md"
-                fullWidth
-              />
-            </div>
-
-            <p className="text-center text-xs leading-relaxed text-dark/50">
-              Нажимая кнопку, вы соглашаетесь на обработку контактных данных.
-            </p>
-          </form>
-        </DialogPanel>
+          </DialogPanel>
+        </div>
       </div>
     </Dialog>
   );

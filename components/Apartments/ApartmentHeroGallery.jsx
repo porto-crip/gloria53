@@ -31,58 +31,61 @@ const ApartmentHeroGallery = ({ images = [], apartmentTitle = "" }) => {
 
     return (
         <>
-            <div className="relative grid min-h-[420px] min-w-0 overflow-hidden rounded-4xl bg-white p-5 sm:p-8 lg:min-h-full">
+            <div className="relative grid min-h-[420px] min-w-0 overflow-hidden rounded-4xl bg-white p-4 sm:p-8 lg:min-h-full">
                 <div className="absolute inset-x-8 top-1/2 h-32 -translate-y-1/2 rounded-full bg-accent/5 blur-3xl" />
 
-                <div className="apartment-hero-gallery relative z-10 min-h-[360px] min-w-0 overflow-hidden">
-                    <Swiper
-                        modules={[Navigation, Pagination, Keyboard]}
-                        navigation
-                        pagination={{ clickable: true }}
-                        keyboard={{ enabled: true }}
-                        onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-                        className="h-full w-full"
-                        style={{
-                            "--swiper-navigation-color": "#E85D1F",
-                            "--swiper-pagination-color": "#E85D1F",
-                            "--swiper-navigation-size": "36px",
-                            "--swiper-navigation-sides-offset": "-4px"
-                        }}
-
-                    >
-                        {galleryImages.map((image, index) => (
-                            <SwiperSlide key={image.src} className="!grid !place-items-center">
-                                <button
-                                    type="button"
-                                    onClick={() => openGallery(index)}
-                                    className="grid h-full w-full place-items-center"
-                                    aria-label={`Открыть изображение: ${image.caption}`}
-                                >
-                                    <img
-                                        src={image.src}
-                                        alt={image.alt || image.caption || apartmentTitle}
-                                        loading={index === 0 ? "eager" : "lazy"}
-                                        decoding="async"
-                                        className="max-h-[520px] w-full max-w-[560px] p-5 object-contain mix-blend-multiply"
-                                    />
-                                </button>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-
-                    <button
-                        type="button"
-                        onClick={() => openGallery(activeIndex)}
-                        className="absolute right-3 top-0 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-dark/80 text-white shadow-lg backdrop-blur-sm transition hover:bg-accent"
-                        aria-label={`Открыть изображение: ${activeImage.caption}`}
-                    >
-                        <Maximize2 className="h-4.5 w-4.5" />
-                    </button>
-
-                    <div className="pointer-events-none absolute top-0 left-4 right-4 z-20">
-                        <div className="mx-auto flex w-max max-w-full items-center justify-center rounded-full bg-dark/80 px-4 py-2 text-center text-sm font-medium text-white shadow-lg backdrop-blur-sm">
-                            {activeImage.caption}
+                <div className="apartment-hero-gallery relative z-10 grid min-h-[360px] min-w-0 grid-rows-[auto_1fr] overflow-hidden">
+                    <div className="relative z-20 mb-3 flex items-center justify-between gap-3">
+                        <div className="min-w-0 rounded-full bg-dark/80 px-4 py-2 text-sm font-medium text-white shadow-lg backdrop-blur-sm">
+                            <p className="truncate">
+                                {activeImage.caption}
+                            </p>
                         </div>
+
+                        <button
+                            type="button"
+                            onClick={() => openGallery(activeIndex)}
+                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-dark/80 text-white shadow-lg backdrop-blur-sm transition hover:bg-accent"
+                            aria-label={`Открыть изображение: ${activeImage.caption}`}
+                        >
+                            <Maximize2 className="h-4.5 w-4.5" />
+                        </button>
+                    </div>
+
+                    <div className="min-h-0 min-w-0 overflow-hidden">
+                        <Swiper
+                            modules={[Navigation, Pagination, Keyboard]}
+                            navigation
+                            pagination={{ clickable: true }}
+                            keyboard={{ enabled: true }}
+                            onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+                            className="h-full w-full"
+                            style={{
+                                "--swiper-navigation-color": "#E85D1F",
+                                "--swiper-pagination-color": "#E85D1F",
+                                "--swiper-navigation-size": "30px",
+                                "--swiper-navigation-sides-offset": "8px",
+                            }}
+                        >
+                            {galleryImages.map((image, index) => (
+                                <SwiperSlide key={image.src} className="!grid !place-items-center">
+                                    <button
+                                        type="button"
+                                        onClick={() => openGallery(index)}
+                                        className="grid h-full w-full place-items-center"
+                                        aria-label={`Открыть изображение: ${image.caption}`}
+                                    >
+                                        <img
+                                            src={image.src}
+                                            alt={image.alt || image.caption || apartmentTitle}
+                                            loading={index === 0 ? "eager" : "lazy"}
+                                            decoding="async"
+                                            className="max-h-[500px] w-full max-w-[560px] object-contain px-10 pb-12 pt-4 mix-blend-multiply sm:px-14"
+                                        />
+                                    </button>
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
                     </div>
                 </div>
             </div>
@@ -117,11 +120,12 @@ const ApartmentHeroGallery = ({ images = [], apartmentTitle = "" }) => {
                             zoom
                             initialSlide={startIndex}
                             className="h-full w-full"
-                             style={{
-    "--swiper-navigation-color": "#E85D1F",
-    "--swiper-pagination-color": "#E85D1F",
-    "--swiper-navigation-size": "36px",
-  }}
+                            style={{
+                                "--swiper-navigation-color": "#E85D1F",
+                                "--swiper-pagination-color": "#E85D1F",
+                                "--swiper-navigation-size": "32px",
+                                "--swiper-navigation-sides-offset": "14px",
+                            }}
                         >
                             {galleryImages.map((image) => (
                                 <SwiperSlide key={image.src}>
