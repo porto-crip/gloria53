@@ -1,17 +1,19 @@
-import { amenitiesData, iconsMap } from '../../data/amenities';
+import { iconsMap } from "@/data/amenities";
 
-const AmenityItem = ({ amenityId, className, classNameSpan }) => {
-  const amenity = amenitiesData.find(a => a.id === amenityId);
+const AmenityItem = ({ amenity, className = "" }) => {
   if (!amenity) return null;
-  
-  const Icon = iconsMap[amenity.iconKey];
-  
-  return Icon ? (
-    <div className={`flex items-center gap-2 px-2 min-w-min bg-accent/10 h-7 rounded-full whitespace-nowrap ${className}`}>
-      <Icon className="w-5 h-5 text-dark80" />
-      <span className={classNameSpan}>{amenity.name}</span>
+
+  const Icon = iconsMap[amenity.icon];
+
+  return (
+    <div
+      className={`inline-flex w-max shrink-0 items-center gap-2 whitespace-nowrap text-dark ${className}`}
+    >
+      {Icon ? <Icon className="h-4 w-4 shrink-0 text-dark60" /> : null}
+
+      <span>{amenity.name}</span>
     </div>
-  ) : null;
+  );
 };
 
 export default AmenityItem;

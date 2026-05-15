@@ -1,57 +1,134 @@
-"use client";
-import Filter from "@/components/Filter/page";
-import SortDropdown from "@/components/UI/SortDropdown";
-import ComplexSelector from "@/components/ComplexSelector";
-import MortgageInfoBlock from "@/components/MortgageInfoBlock";
-import { useState } from "react";
+import { prisma } from "@/lib/prisma";
+import ApartmentsCatalog from "@/components/Apartments/ApartmentsCatalog";
 
-import { allApartments } from "@/data/apartments";
-import { complex } from "@/data/complex";
+const formatSettlementDate = (date) => {
+  if (!date) return "";
 
-import SliderSwitch from "@/components/UI/SliderSwitch";
-import AppartmentCard from "@/components/UI/AppartmentCard";
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
 
-export default function Appartments() {
-  const [selectedComplex, setSelectedComplex] = useState("ЖК Юннатов");
-  const [view, setView] = useState("grid");
+  if (month >= 1 && month <= 3) return `1 квартал ${year}`;
+  if (month >= 4 && month <= 6) return `2 квартал ${year}`;
+  if (month >= 7 && month <= 9) return `3 квартал ${year}`;
+  if (month >= 10 && month <= 12) return `4 квартал ${year}`;
 
-  const selectParamChoice = (indexButton) => {
-    setSelectedParam(indexButton);
-  };
+  return "";
+};
 
-  return (
-    <div className="container-padding mx-auto">
-      <div className="text-center my-30">
-        <h1 className="text-4xl md:text-5xl text-dark px-4">
-          Квартиры в
-          <ComplexSelector
-            selectedComplex={selectedComplex}
-            onSelect={setSelectedComplex}
-            options={complex}
-          />
-        </h1>
-      </div>
-      <article>
-        <Filter />
-        <div className="flex justify-between">
-          <SortDropdown
-            text={"Сортировать"}
-            iconLink={"/chevron-arrow.svg"}
-            iconAlt={"next-to-page"}
-          />
-          <SliderSwitch view={view} setView={setView} />
-        </div>
-      </article>
-
-      <MortgageInfoBlock />
-
-      <div
-        className={`${view == "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6" : "grid gap-6"} mt-12`}
-      >
-        {allApartments.map((item, index) => (
-          <AppartmentCard view={view} key={index} {...item} />
-        ))}
-      </div>
-    </div>
+const serializeApartment = (apartment) => {
+  const sortedImages = [...apartment.images].sort(
+    (a, b) => a.sortOrder - b.sortOrder,
   );
+
+  const mainImageMedium = sortedImages.find(
+    (image) => image.type === "layout_medium",
+  );
+
+  return {
+    id: apartment.id,
+    number: apartment.number,
+
+    rooms: apartment.rooms,
+    areaTotal: apartment.areaTotal.toString(),
+    price: apartment.price,
+    pricePerSqm: apartment.pricePerSqm,
+
+    mainImage: apartment.mainImage || sortedImages[0]?.url || "",
+    mainImageMedium: mainImageMedium?.url || "",
+    planImage: apartment.planImage || "",
+    imageAlt: `Планировка квартиры №${apartment.number}`,
+
+    buildingPosition: apartment.building.position || "",
+    floor: apartment.floor,
+    floorsTotal: apartment.building.floorsTotal,
+
+    entrance: apartment.entrance,
+    ceilingHeight: apartment.ceilingHeight
+      ? apartment.ceilingHeight.toString()
+      : "",
+
+    settlementDate: formatSettlementDate(
+      apartment.building.plannedSettlementDate,
+    ),
+
+    complexName: apartment.building.complex.name,
+    complexAddress: apartment.building.complex.address,
+    buildingAddress: apartment.building.address,
+
+    apartmentType: "Квартира",
+    article: apartment.article,
+
+    amenityItems: apartment.amenities.map((item) => ({
+      id: item.amenity.id,
+      name: item.amenity.name,
+      slug: item.amenity.slug,
+      icon: item.amenity.icon,
+    })),
+
+    roomAreas: apartment.roomAreas.map((room) => ({
+      id: room.id,
+      name: room.name,
+      area: room.area.toString(),
+      sortOrder: room.sortOrder,
+    })),
+  };
+};
+
+const getApartmentsPageData = async () => {
+  const [apartments, complexes] = await Promise.all([
+    prisma.apartment.findMany({
+      where: {
+        status: "available",
+      },
+      include: {
+        building: {
+          include: {
+            complex: true,
+          },
+        },
+        images: {
+          orderBy: {
+            sortOrder: "asc",
+          },
+        },
+        roomAreas: {
+          orderBy: {
+            sortOrder: "asc",
+          },
+        },
+        amenities: {
+          include: {
+            amenity: true,
+          },
+        },
+      },
+      orderBy: {
+        id: "asc",
+      },
+    }),
+
+    prisma.residentialComplex.findMany({
+      where: {
+        status: "active",
+      },
+      orderBy: {
+        id: "asc",
+      },
+    }),
+  ]);
+
+  return {
+    apartments: apartments.map(serializeApartment),
+    complexes: complexes.map((complex) => ({
+      id: complex.id,
+      name: complex.name,
+      slug: complex.slug,
+    })),
+  };
+};
+
+export default async function ApartmentsPage() {
+  const { apartments, complexes } = await getApartmentsPageData();
+
+  return <ApartmentsCatalog apartments={apartments} complexes={complexes} />;
 }

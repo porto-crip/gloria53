@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ResidentialComplex {
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String   @unique
+  description String?
+  address     String?
+  status      String   @default("active")
+  heroImage   String?
+
+  buildings   Building[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Building {
+  id                    Int      @id @default(autoincrement())
+  complexId             Int
+  name                  String?
+  position              String?
+  address               String?
+  floorsTotal           Int?
+  entrancesTotal        Int?
+  plannedSettlementDate DateTime?
+  status                String   @default("active")
+
+  complex               ResidentialComplex @relation(fields: [complexId], references: [id])
+  apartments            Apartment[]
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model Apartment {
+  id            Int      @id @default(autoincrement())
+  buildingId    Int
+
+  number        String
+  rooms         Int
+  areaTotal     Decimal  @db.Decimal(8, 2)
+  price         Int
+  pricePerSqm   Int?
+
+  floor         Int
+  entrance      Int?
+  ceilingHeight Decimal? @db.Decimal(4, 2)
+
+  status        String   @default("available")
+  layoutType    String?
+  article       String?
+
+  mainImage     String?
+  planImage     String?
+
+  building      Building @relation(fields: [buildingId], references: [id])
+
+  images        ApartmentImage[]
+  roomAreas     ApartmentRoomArea[]
+  amenities     ApartmentAmenity[]
+  applications  Application[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ApartmentImage {
+  id          Int      @id @default(autoincrement())
+  apartmentId Int
+  url         String
+  title       String?
+  type        String?
+  sortOrder   Int      @default(0)
+
+  apartment   Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+}
+
+model ApartmentRoomArea {
+  id          Int      @id @default(autoincrement())
+  apartmentId Int
+  name        String
+  area        Decimal  @db.Decimal(8, 2)
+  sortOrder   Int      @default(0)
+
+  apartment   Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+}
+
+model Amenity {
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String   @unique
+  icon        String?
+
+  apartments  ApartmentAmenity[]
+}
+
+model ApartmentAmenity {
+  apartmentId Int
+  amenityId   Int
+
+  apartment   Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+  amenity     Amenity   @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+
+  @@id([apartmentId, amenityId])
+}
+
+model PurchaseOption {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+
+  applications Application[]
+}
+
+model Application {
+  id               Int      @id @default(autoincrement())
+  apartmentId      Int
+  purchaseOptionId Int?
+
+  name             String
+  phone            String
+  comment          String?
+  status           String   @default("new")
+
+  apartment        Apartment @relation(fields: [apartmentId], references: [id])
+  purchaseOption   PurchaseOption? @relation(fields: [purchaseOptionId], references: [id])
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}

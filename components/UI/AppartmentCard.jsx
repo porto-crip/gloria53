@@ -8,73 +8,91 @@ const formatArea = (value) => {
   return String(value).replace(".", ",");
 };
 
-const ApartmentTitle = ({ rooms, area }) => {
+const ApartmentTitle = ({ rooms, areaTotal }) => {
   return (
     <h3 className="text-xl font-medium leading-tight text-dark sm:text-2xl">
-      {rooms} комнаты, {formatArea(area)}&nbsp;м<sup>2</sup>
+      {rooms} комнаты, {formatArea(areaTotal)}&nbsp;м<sup>2</sup>
     </h3>
   );
 };
 
-const ApartmentPrice = ({ price, priceSqm }) => {
+const ApartmentPrice = ({ price, pricePerSqm }) => {
   return (
     <div className="flex flex-wrap items-center gap-2">
       <p className="text-xl font-medium text-accent sm:text-2xl">
         {formatted(price)}
       </p>
 
-      <span className="text-dark80">·</span>
+      {pricePerSqm ? (
+        <>
+          <span className="text-dark80">·</span>
 
-      <p className="text-sm text-dark80">
-        {formatted(priceSqm)} ₽ / м<sup>2</sup>
-      </p>
+          <p className="text-sm text-dark80">
+            {formatted(pricePerSqm)} ₽ / м<sup>2</sup>
+          </p>
+        </>
+      ) : null}
     </div>
   );
 };
 
-const ApartmentMeta = ({ position, floor, floorTotal, className = "" }) => {
+const ApartmentMeta = ({
+  buildingPosition,
+  floor,
+  floorsTotal,
+  className = "",
+}) => {
   return (
     <div
       className={`flex flex-wrap items-center gap-2 text-sm text-dark ${className}`}
     >
-      <span>Позиция {position}</span>
-      <span className="text-dark80">·</span>
-      <span>
-        Этаж {floor} из {floorTotal}
-      </span>
+      {buildingPosition ? <span>Позиция {buildingPosition}</span> : null}
+
+      {buildingPosition && floor ? <span className="text-dark80">·</span> : null}
+
+      {floor ? (
+        <span>
+          Этаж {floor}
+          {floorsTotal ? ` из ${floorsTotal}` : ""}
+        </span>
+      ) : null}
     </div>
   );
 };
 
-const ApartmentNumber = ({ id }) => {
+const ApartmentNumber = ({ number }) => {
   return (
     <span className="rounded-lg bg-dark15 px-2 py-1 text-sm text-dark">
-      №{id}
+      №{number}
     </span>
   );
 };
 
-const ApartmentImage = ({ imageUrl, imageAlt, className = "" }) => {
+const ApartmentImage = ({ mainImage, mainImageMedium, imageAlt, className = "" }) => {
+  const imageSrc = mainImageMedium || mainImage;
+
+  if (!imageSrc) return null;
+
   return (
     <img
       className={`mix-blend-multiply object-contain ${className}`}
-      src={imageUrl}
+      src={imageSrc}
       alt={imageAlt}
     />
   );
 };
 
-const ApartmentAmenitiesSlider = ({ amenities }) => {
-  if (!amenities) return null;
+const ApartmentAmenitiesSlider = ({ amenityItems }) => {
+  if (!amenityItems?.length) return null;
 
   return (
-    <footer className="mt-4 overflow-y-auto flex md:block">
+    <footer className="mt-4 flex overflow-y-auto md:block">
       <FreemodeSliderChildren className="rounded-xl">
-        {amenities.map((amenityId) => (
+        {amenityItems.map((amenity) => (
           <AmenityItem
-            key={amenityId}
-            amenityId={amenityId}
-            className="rounded-xl text-sm"
+            key={amenity.id}
+            amenity={amenity}
+            className="flex items-center gap-2 px-2 min-w-min bg-accent/10 h-7 rounded-full whitespace-nowrap rounded-xl text-sm"
           />
         ))}
       </FreemodeSliderChildren>
@@ -82,15 +100,15 @@ const ApartmentAmenitiesSlider = ({ amenities }) => {
   );
 };
 
-const ApartmentAmenitiesList = ({ amenities }) => {
-  if (!amenities) return null;
+const ApartmentAmenitiesList = ({ amenityItems }) => {
+  if (!amenityItems?.length) return null;
 
   return (
     <div className="hidden gap-2 md:grid">
-      {amenities.map((amenityId) => (
+      {amenityItems.map((amenity) => (
         <AmenityItem
-          key={amenityId}
-          amenityId={amenityId}
+          key={amenity.id}
+          amenity={amenity}
           className="max-w-max rounded-xl text-xs lg:text-sm"
         />
       ))}
@@ -98,24 +116,21 @@ const ApartmentAmenitiesList = ({ amenities }) => {
   );
 };
 
-const ApartmentMobileDetails = ({
-  rooms,
-  sqm,
-  price,
-  priceSqm,
-  position,
-  floor,
-  floorTotal,
-}) => {
+const ApartmentMobileDetails = ({ apartment }) => {
   const rows = [
-    ["Количество комнат", rooms],
-    ["Площадь", `${formatArea(sqm)} м²`],
-    ["Стоимость", formatted(price)],
-    ["Стоимость за м²", `${formatted(priceSqm)} ₽`],
+    ["Количество комнат", apartment.rooms],
+    ["Площадь", `${formatArea(apartment.areaTotal)} м²`],
+    ["Стоимость", formatted(apartment.price)],
+    apartment.pricePerSqm
+      ? ["Стоимость за м²", `${formatted(apartment.pricePerSqm)} ₽`]
+      : null,
     ["Ипотека", "Рассчитывается индивидуально"],
-    ["Позиция", position],
-    [`Этаж из ${floorTotal}`, floor],
-  ];
+    ["Позиция", apartment.buildingPosition],
+    [
+      apartment.floorsTotal ? `Этаж из ${apartment.floorsTotal}` : "Этаж",
+      apartment.floor,
+    ],
+  ].filter(Boolean);
 
   return (
     <div className="grid gap-2 md:hidden">
@@ -132,83 +147,80 @@ const ApartmentMobileDetails = ({
   );
 };
 
-const ApartmentCardGrid = ({
-  id,
-  rooms,
-  sqm,
-  price,
-  priceSqm,
-  imageUrl,
-  imageAlt,
-  position,
-  floor,
-  floorTotal,
-  amenities,
-}) => {
+const ApartmentCardGrid = ({ apartment }) => {
   return (
     <article className="group flex flex-col rounded-3xl bg-dark10 p-5 sm:p-6">
       <header className="grid gap-1">
         <div className="flex items-start justify-between gap-4">
-          <ApartmentTitle rooms={rooms} area={sqm} />
-          <ApartmentNumber id={id} />
+          <ApartmentTitle
+            rooms={apartment.rooms}
+            areaTotal={apartment.areaTotal}
+          />
+
+          <ApartmentNumber number={apartment.number} />
         </div>
 
-        <ApartmentPrice price={price} priceSqm={priceSqm} />
-
+        <ApartmentPrice
+          price={apartment.price}
+          pricePerSqm={apartment.pricePerSqm}
+        />
       </header>
 
       <div className="grid h-full content-between">
         <div className="my-8 flex place-self-center md:place-self-auto">
           <ApartmentImage
-            imageUrl={imageUrl}
-            imageAlt={imageAlt}
-            className="w-fit max-w-[280px] h-fit"
+            mainImage={apartment.mainImage}
+            mainImageMedium={apartment.mainImageMedium}
+            imageAlt={apartment.imageAlt}
+            className="h-fit w-fit max-w-[280px]"
           />
         </div>
 
         <ApartmentMeta
-          position={position}
-          floor={floor}
-          floorTotal={floorTotal}
+          buildingPosition={apartment.buildingPosition}
+          floor={apartment.floor}
+          floorsTotal={apartment.floorsTotal}
           className="justify-center md:justify-start"
         />
 
-        <ApartmentAmenitiesSlider amenities={amenities} className="" />
+        <ApartmentAmenitiesSlider amenityItems={apartment.amenityItems} />
 
         <div className="mt-5">
-          <Button text="Подробнее" size="sm" variant="outlineAccent" fullWidth linkToPage={`/apartments/${id}`} />
+          <Button
+            text="Подробнее"
+            size="sm"
+            variant="outlineAccent"
+            fullWidth
+            linkToPage={`/apartments/${apartment.id}`}
+          />
         </div>
       </div>
     </article>
   );
 };
 
-const ApartmentCardList = ({
-  id,
-  rooms,
-  sqm,
-  price,
-  priceSqm,
-  imageUrl,
-  imageAlt,
-  position,
-  floor,
-  floorTotal,
-  amenities,
-}) => {
+const ApartmentCardList = ({ apartment }) => {
   return (
     <article className="relative grid gap-6 rounded-3xl bg-dark10 p-5 sm:p-6 md:grid-cols-[160px_1.5fr_0.8fr_1fr_auto_auto] md:items-center lg:p-8">
       <div className="flex justify-center md:justify-start">
         <ApartmentImage
-          imageUrl={imageUrl}
-          imageAlt={imageAlt}
+          mainImage={apartment.mainImage}
+          mainImageMedium={apartment.mainImageMedium}
+          imageAlt={apartment.imageAlt}
           className="h-[160px] w-full max-w-[220px] md:h-[130px] md:max-w-[160px]"
         />
       </div>
 
       <div className="hidden gap-2 md:grid">
-        <ApartmentTitle rooms={rooms} area={sqm} />
-        <ApartmentPrice price={price} priceSqm={priceSqm} />
+        <ApartmentTitle
+          rooms={apartment.rooms}
+          areaTotal={apartment.areaTotal}
+        />
+
+        <ApartmentPrice
+          price={apartment.price}
+          pricePerSqm={apartment.pricePerSqm}
+        />
 
         <p className="text-sm text-dark80">
           Ипотека рассчитывается индивидуально
@@ -216,16 +228,16 @@ const ApartmentCardList = ({
       </div>
 
       <ApartmentMeta
-        position={position}
-        floor={floor}
-        floorTotal={floorTotal}
+        buildingPosition={apartment.buildingPosition}
+        floor={apartment.floor}
+        floorsTotal={apartment.floorsTotal}
         className="hidden md:flex"
       />
 
-      <ApartmentAmenitiesList amenities={amenities} />
+      <ApartmentAmenitiesList amenityItems={apartment.amenityItems} />
 
       <div className="absolute right-5 top-5 md:static">
-        <ApartmentNumber id={id} />
+        <ApartmentNumber number={apartment.number} />
       </div>
 
       <div className="hidden md:block">
@@ -233,29 +245,21 @@ const ApartmentCardList = ({
           text="Подробнее"
           size="sm"
           variant="outlineAccent"
-          linkToPage={`/apartments/${id}`}
+          linkToPage={`/apartments/${apartment.id}`}
         />
       </div>
 
-      <ApartmentMobileDetails
-        rooms={rooms}
-        sqm={sqm}
-        price={price}
-        priceSqm={priceSqm}
-        position={position}
-        floor={floor}
-        floorTotal={floorTotal}
-      />
+      <ApartmentMobileDetails apartment={apartment} />
     </article>
   );
 };
 
-const ApartmentCard = (props) => {
-  if (props.view === "grid") {
-    return <ApartmentCardGrid {...props} />;
+const AppartmentCard = ({ view, apartment }) => {
+  if (view === "grid") {
+    return <ApartmentCardGrid apartment={apartment} />;
   }
 
-  return <ApartmentCardList {...props} />;
+  return <ApartmentCardList apartment={apartment} />;
 };
 
-export default ApartmentCard;
+export default AppartmentCard;
