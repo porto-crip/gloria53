@@ -63,7 +63,6 @@ const ImageSlider = ({ data }) => {
                 src={item.src}
                 alt={item.alt}
                 className="w-full h-full object-contain"
-                // onClick={() => openModal(item.src, item.alt)}
               />
             </div>
           </SwiperSlide>
@@ -104,43 +103,6 @@ const ImageSlider = ({ data }) => {
           />
         </svg>
       </button>
-{/* 
-      Модалка на зум
-      {isModalOpen && selectedImage && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
-          onClick={closeModal}
-        >
-          <div className="relative w-full h-screen mx-auto content-center justify-items-center">
-            <img
-              src={selectedImage.src}
-              alt={selectedImage.alt}
-              className="w-auto h-auto max-w-full max-h-[90vh] object-contain"
-            />
-
-            {/* Кнопка закрытия */}
-            {/* <button
-              onClick={closeModal}
-              className="absolute -top-12 right-0 w-10 h-10 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 flex items-center justify-center text-white transition-all duration-200"
-              aria-label="Закрыть"
-            >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M18 6L6 18M6 6L18 18"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
-
-            Информация об изображении
-            <div className="absolute -bottom-12 left-0 right-0 text-center text-white text-sm">
-              {selectedImage.alt}
-            </div>
-          </div>
-        </div> */}
-      {/*)}*/}
     </div>
   );
 };

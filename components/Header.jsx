@@ -21,7 +21,7 @@ const NAV_LINKS = [
   },
   {
     label: 'Новости',
-    href: '#',
+    href: '/news',
   },
   {
     label: 'О компании',

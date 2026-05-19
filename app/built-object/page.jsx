@@ -229,7 +229,7 @@ const BuiltObjectsPage = () => {
 
       {/* <section className="container-padding section mb-24">
         <div className="grid overflow-hidden rounded-4xl bg-dark10 p-3 sm:p-4 lg:grid-cols-[1fr_0.8fr]">
-          <div className="grid content-center rounded-[2rem] bg-accent p-6 text-white sm:p-8 lg:p-10">
+          <div className="grid content-center rounded-4xl bg-accent p-6 text-white sm:p-8 lg:p-10">
             <h2 className="max-w-3xl text-2xl lg:text-3xl font-medium leading-tight sm:text-4xl">
               Посмотрите актуальные предложения компании
             </h2>
@@ -249,7 +249,7 @@ const BuiltObjectsPage = () => {
             </div>
           </div>
 
-          <div className="relative min-h-[260px] overflow-hidden rounded-[2rem] sm:min-h-[340px] lg:min-h-full">
+          <div className="relative min-h-[260px] overflow-hidden rounded-4xl sm:min-h-[340px] lg:min-h-full">
             <img
               src="/built/family-home.jpg"
               alt="Новая квартира"

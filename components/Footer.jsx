@@ -20,10 +20,9 @@ const FOOTER_SECTIONS = [
     id: 'info',
     title: 'Информация',
     links: [
-      { label: 'Новости', href: '#' },
-      { label: 'Акции', href: '#' },
-      { label: 'О компании', href: '#' },
-      { label: 'Построенные объекты', href: '#' },
+      { label: 'Новости и Акции', href: '/news' },
+      { label: 'О компании', href: '/about' },
+      { label: 'Построенные объекты', href: '/built-object' },
     ],
   },
   {

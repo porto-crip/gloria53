@@ -1,7 +1,7 @@
 import PromoCard from "@/components/PromoCard";
 import Filter from "@/components/Filter/page";
 import CardComplex from "@/components/UI/CardComplex";
-import NewsModule from "@/components/News/NewsModule/page";
+import NewsModule from "@/components/NewsPromotions/NewsModule/page";
 export default function Home() {
   return (
     <main className="min-h-screen">

@@ -1,0 +1,218 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model ResidentialComplex {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String?
+  address     String?
+  image       String?
+  isActive    Boolean  @default(true)
+
+  buildings  Building[]
+  apartments Apartment[]
+  news        NewsItem[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("residential_complexes")
+}
+
+model Building {
+  id                   String @id @default(uuid())
+  name                 String
+  address              String?
+  floorsCount          Int?
+  constructionDeadline String?
+  status               String?
+
+  residentialComplexId String
+  residentialComplex   ResidentialComplex @relation(fields: [residentialComplexId], references: [id], onDelete: Cascade)
+
+  apartments Apartment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("buildings")
+}
+
+model Apartment {
+  id          String  @id @default(uuid())
+  number      String?
+  slug        String  @unique
+
+  rooms       Int
+  floor       Int?
+  area        Float
+  price       Int
+  status      String  @default("available")
+
+  description String?
+  planImage   String?
+  mainImage   String?
+
+  residentialComplexId String
+  residentialComplex   ResidentialComplex @relation(fields: [residentialComplexId], references: [id], onDelete: Cascade)
+
+  buildingId String?
+  building   Building? @relation(fields: [buildingId], references: [id], onDelete: SetNull)
+
+  images          ApartmentImage[]
+  roomAreas       ApartmentRoomArea[]
+  amenities       ApartmentAmenity[]
+  purchaseOptions PurchaseOption[]
+  applications    Application[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("apartments")
+}
+
+model ApartmentImage {
+  id          String  @id @default(uuid())
+  url         String
+  alt         String?
+  sortOrder   Int     @default(0)
+
+  apartmentId String
+  apartment   Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@map("apartment_images")
+}
+
+model ApartmentRoomArea {
+  id          String @id @default(uuid())
+  name        String
+  area        Float
+  sortOrder   Int    @default(0)
+
+  apartmentId String
+  apartment   Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+
+  @@map("apartment_room_areas")
+}
+
+model Amenity {
+  id        String @id @default(uuid())
+  name      String
+  slug      String @unique
+  icon      String?
+
+  apartments ApartmentAmenity[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("amenities")
+}
+
+model ApartmentAmenity {
+  id          String @id @default(uuid())
+
+  apartmentId String
+  apartment   Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+
+  amenityId String
+  amenity   Amenity @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+
+  @@unique([apartmentId, amenityId])
+  @@map("apartment_amenities")
+}
+
+model PurchaseOption {
+  id          String @id @default(uuid())
+  title       String
+  description String?
+  sortOrder   Int    @default(0)
+
+  apartmentId String
+  apartment   Apartment @relation(fields: [apartmentId], references: [id], onDelete: Cascade)
+
+  @@map("purchase_options")
+}
+
+model Application {
+  id        String @id @default(uuid())
+  name      String
+  phone     String
+  email     String?
+  comment   String?
+  status    String @default("new")
+
+  apartmentId String?
+  apartment   Apartment? @relation(fields: [apartmentId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("applications")
+}
+
+model NewsItem {
+  id          String  @id @default(uuid())
+  title       String
+  slug        String  @unique
+  excerpt     String?
+  content     String?
+  image       String?
+  label       String  @default("Новости")
+  type        String  @default("news")
+  isFeatured  Boolean @default(false)
+  isPublished Boolean @default(true)
+
+  residentialComplexId String?
+  residentialComplex   ResidentialComplex? @relation(fields: [residentialComplexId], references: [id], onDelete: SetNull)
+
+  publishedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("news_items")
+}
+
+model BuiltObject {
+  id          String  @id @default(uuid())
+  title       String
+  slug        String  @unique
+  description String?
+  address     String?
+  image       String?
+
+  latitude    Float?
+  longitude   Float?
+
+  isPublished Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("built_objects")
+}
+
+model AdminUser {
+  id        String @id @default(uuid())
+  name      String
+  email     String @unique
+  password  String
+
+  role      String @default("admin")
+  isActive  Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admin_users")
+}

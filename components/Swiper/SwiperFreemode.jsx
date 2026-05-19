@@ -11,7 +11,7 @@ import 'swiper/css/navigation';
 
 import { useState } from "react";
 import Card from "@/components/Unnatov/UI/Card";
-import CardNews from "@/components/News/Card";
+import CardNews from "@/components/NewsPromotions/CardNews";
 
 const freemodeSlider = ({ data, type = "default", horizontalCard = false, slidesPerView = 0 }) => {
     const [isBeginning, setIsBeginning] = useState(true);
