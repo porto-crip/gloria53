@@ -1,6 +1,13 @@
 import { PrismaClient, Prisma } from "@prisma/client";
+import crypto from "node:crypto";
 
 const prisma = new PrismaClient();
+
+const hashPassword = (password: string, salt = crypto.randomBytes(16).toString("hex")) => {
+  const hash = crypto.scryptSync(password, salt, 64).toString("hex");
+
+  return `scrypt:${salt}:${hash}`;
+};
 
 const residentialComplexesSeed = [
   {
@@ -93,6 +100,89 @@ const purchaseOptionsSeed = [
     description: "Условия уточняются у менеджера",
     isActive: true,
     sortOrder: 3,
+  },
+];
+
+const adminUsersSeed = [
+  {
+    name: "Администратор",
+    email: process.env.SEED_ADMIN_EMAIL || "admin@gloria.local",
+    passwordHash: process.env.SEED_ADMIN_PASSWORD_HASH || hashPassword("ChangeMe53!"),
+    role: "admin",
+    isActive: true,
+  },
+];
+
+const newsItemsSeed = [
+  {
+    complexSlug: "zhk-yunnatov",
+    type: "promotion",
+    label: "Акция",
+    title: "Специальные условия на квартиры в ЖК «Юннатов»",
+    excerpt: "Индивидуальные условия покупки на выбранные квартиры.",
+    content: [
+      "Для покупателей квартир в жилом комплексе «Юннатов» доступны индивидуальные условия покупки. Менеджер отдела продаж поможет подобрать подходящий вариант, рассчитать платёж и уточнить актуальные предложения.",
+      "Предложение распространяется на выбранные квартиры и зависит от планировки, этажа и способа оплаты. Подробные условия можно уточнить в отделе продаж.",
+    ],
+    image: "/images/news/news3.jpg",
+    slug: "special-offer-yunnatov",
+    isFeatured: true,
+    isPublished: true,
+    sortOrder: 1,
+    publishedAt: new Date("2026-05-18"),
+  },
+  {
+    complexSlug: "zhk-yunnatov",
+    type: "construction",
+    label: "Ход строительства",
+    title: "Обновление по строительству ЖК «Юннатов»",
+    excerpt: "Фотоотчёт о текущих работах на объекте.",
+    content: [
+      "На площадке жилого комплекса «Юннатов» продолжаются плановые строительные работы. Команда ведёт работы по графику и готовит очередной этап благоустройства территории.",
+      "В фотоотчёте собрали актуальные кадры объекта, чтобы покупатели могли следить за динамикой строительства и видеть изменения на площадке.",
+    ],
+    image: "/images/news/news2.jpg",
+    slug: "construction-yunnatov-may",
+    isFeatured: false,
+    isPublished: true,
+    sortOrder: 2,
+    publishedAt: new Date("2026-05-12"),
+  },
+  {
+    complexSlug: null,
+    type: "news",
+    label: "Новости",
+    title: "На сайте появился раздел построенных объектов",
+    excerpt:
+      "Теперь пользователи могут ознакомиться с реализованными проектами компании.",
+    content: [
+      "Мы добавили на сайт раздел с построенными объектами. В нём можно посмотреть реализованные проекты компании и познакомиться с нашим опытом в строительстве.",
+      "Раздел будет постепенно пополняться новыми материалами, фотографиями и описаниями объектов.",
+    ],
+    image: "/images/news/news1.jpg",
+    slug: "built-objects-section",
+    isFeatured: false,
+    isPublished: true,
+    sortOrder: 3,
+    publishedAt: new Date("2026-05-08"),
+  },
+  {
+    complexSlug: "zhk-yunnatov",
+    type: "promotion",
+    label: "Акция",
+    title: "Скидка на квартиры с удобной планировкой",
+    excerpt:
+      "Специальные условия покупки на выбранные квартиры до конца месяца.",
+    content: [
+      "До конца месяца действуют специальные условия на выбранные квартиры с удобными планировками. Это хороший момент, чтобы рассмотреть варианты для жизни или инвестиций.",
+      "В отделе продаж подскажут доступные квартиры, расскажут о планировках и помогут выбрать формат покупки.",
+    ],
+    image: "/images/news/news2.jpg",
+    slug: "discount-for-apartments",
+    isFeatured: true,
+    isPublished: true,
+    sortOrder: 4,
+    publishedAt: new Date("2026-06-30"),
   },
 ];
 
@@ -400,6 +490,8 @@ async function main() {
   await prisma.apartmentImage.deleteMany();
   await prisma.apartmentRoomArea.deleteMany();
   await prisma.apartment.deleteMany();
+  await prisma.newsItem.deleteMany();
+  await prisma.adminUser.deleteMany();
   await prisma.amenity.deleteMany();
   await prisma.purchaseOption.deleteMany();
   await prisma.building.deleteMany();
@@ -467,6 +559,41 @@ async function main() {
   await prisma.purchaseOption.createMany({
     data: purchaseOptionsSeed,
   });
+
+  console.log("Создание администраторов...");
+
+  await prisma.adminUser.createMany({
+    data: adminUsersSeed,
+  });
+
+  console.log("Создание новостей и акций...");
+
+  for (const newsItem of newsItemsSeed) {
+    const complexId = newsItem.complexSlug
+      ? complexBySlug.get(newsItem.complexSlug)
+      : null;
+
+    if (newsItem.complexSlug && !complexId) {
+      throw new Error(`Не найден ЖК для новости: ${newsItem.complexSlug}`);
+    }
+
+    await prisma.newsItem.create({
+      data: {
+        residentialComplexId: complexId ?? null,
+        type: newsItem.type,
+        label: newsItem.label,
+        title: newsItem.title,
+        excerpt: newsItem.excerpt,
+        content: newsItem.content,
+        image: newsItem.image,
+        slug: newsItem.slug,
+        isFeatured: newsItem.isFeatured,
+        isPublished: newsItem.isPublished,
+        sortOrder: newsItem.sortOrder,
+        publishedAt: newsItem.publishedAt,
+      },
+    });
+  }
 
   console.log("Создание квартир...");
 

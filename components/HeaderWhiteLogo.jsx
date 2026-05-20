@@ -1,7 +1,7 @@
-import Header from './Header'
+import Header from "./Header";
 
 const HeaderWhiteLogo = () => {
-  return <Header variant="white" />
-}
+  return <Header variant="white" />;
+};
 
 export default HeaderWhiteLogo;

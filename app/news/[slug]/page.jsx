@@ -1,18 +1,70 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { prisma } from "@/lib/prisma";
 import { ArrowRight } from "@/icons/ArrowRight";
-import { getNewsItemBySlug, newsItems } from "@/data/news";
 
-export const generateStaticParams = () => {
-  const slugs = [...new Set(newsItems.map((item) => item.slug))];
+export const dynamic = "force-dynamic";
 
-  return slugs.map((slug) => ({ slug }));
+const formatNewsDate = (date) => {
+  if (!date) return "";
+
+  return new Intl.DateTimeFormat("ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+};
+
+const serializeNewsItem = (item) => ({
+  id: item.id,
+  type: item.type,
+  label: item.label,
+  title: item.title,
+  excerpt: item.excerpt,
+  content: item.content,
+  date: formatNewsDate(item.publishedAt),
+  image: item.image,
+  slug: item.slug,
+  featured: item.isFeatured,
+});
+
+const getNewsItemBySlug = async (slug) => {
+  const item = await prisma.newsItem.findFirst({
+    where: {
+      slug,
+      isPublished: true,
+    },
+  });
+
+  return item ? serializeNewsItem(item) : null;
+};
+
+const getLatestNews = async (currentSlug) => {
+  const newsItems = await prisma.newsItem.findMany({
+    where: {
+      isPublished: true,
+      slug: {
+        not: currentSlug,
+      },
+    },
+    orderBy: [
+      {
+        publishedAt: "desc",
+      },
+      {
+        sortOrder: "asc",
+      },
+    ],
+    take: 3,
+  });
+
+  return newsItems.map(serializeNewsItem);
 };
 
 export const generateMetadata = async ({ params }) => {
   const { slug } = await params;
-  const item = getNewsItemBySlug(slug);
+  const item = await getNewsItemBySlug(slug);
 
   if (!item) {
     return {
@@ -26,32 +78,18 @@ export const generateMetadata = async ({ params }) => {
   };
 };
 
-const getLatestNews = (currentSlug) => {
-  const uniqueItems = [];
-  const usedSlugs = new Set();
-
-  newsItems.forEach((newsItem) => {
-    if (newsItem.slug === currentSlug || usedSlugs.has(newsItem.slug)) {
-      return;
-    }
-
-    usedSlugs.add(newsItem.slug);
-    uniqueItems.push(newsItem);
-  });
-
-  return uniqueItems.slice(0, 3);
-};
-
 export default async function NewsDetailPage({ params }) {
   const { slug } = await params;
-  const item = getNewsItemBySlug(slug);
+  const item = await getNewsItemBySlug(slug);
 
   if (!item) {
     notFound();
   }
 
-  const latestNews = getLatestNews(slug);
-  const paragraphs = item.content || [item.excerpt].filter(Boolean);
+  const latestNews = await getLatestNews(slug);
+  const paragraphs = item.content.length
+    ? item.content
+    : [item.excerpt].filter(Boolean);
 
   return (
     <main className="container-padding">

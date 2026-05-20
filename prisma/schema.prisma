@@ -23,6 +23,7 @@ model ResidentialComplex {
   heroImage   String?
 
   buildings   Building[]
+  newsItems   NewsItem[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -143,4 +144,44 @@ model Application {
 
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+}
+
+model NewsItem {
+  id                   Int      @id @default(autoincrement())
+  residentialComplexId Int?
+
+  title                String
+  slug                 String   @unique
+  excerpt              String?
+  content              String[] @default([])
+  image                String?
+  label                String   @default("Новости")
+  type                 String   @default("news")
+  isFeatured           Boolean  @default(false)
+  isPublished          Boolean  @default(true)
+  sortOrder            Int      @default(0)
+
+  residentialComplex   ResidentialComplex? @relation(fields: [residentialComplexId], references: [id], onDelete: SetNull)
+
+  publishedAt          DateTime?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([type])
+  @@index([isPublished, publishedAt])
+}
+
+model AdminUser {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("admin")
+  isActive     Boolean  @default(true)
+  lastLoginAt  DateTime?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([isActive])
 }

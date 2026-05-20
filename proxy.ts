@@ -1,26 +1,18 @@
-// middleware.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
-//   // Получаем путь страницы
-//   const pathname = request.nextUrl.pathname;
-  
-//   // Создаем новые заголовки
-//   const requestHeaders = new Headers(request.headers);
-  
-//   // Добавляем путь в заголовки
-//   requestHeaders.set('x-pathname', pathname);
-  
-//   // Передаем запрос дальше
-//   return NextResponse.next({
-//     request: {
-//       headers: requestHeaders,
-//     },
-//   });
-// }
+  const requestHeaders = new Headers(request.headers);
 
-// // Опционально: указываем, для каких путей запускать middleware
-// export const config = {
-//   matcher: '/:path*', // Запускаем для всех путей
+  requestHeaders.set("x-pathname", request.nextUrl.pathname);
+
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+}
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

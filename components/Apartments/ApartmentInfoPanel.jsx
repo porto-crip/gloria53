@@ -314,7 +314,7 @@ const ApartmentInfoPanel = ({ apartment }) => {
                     <AmenityItem
                       key={amenity.id}
                       amenity={amenity}
-                      className="rounded-full bg-accent25 px-3 py-2 text-xs sm:text-sm"
+                      className="rounded-full h-7 bg-dark10 px-3 py-2 text-xs sm:text-sm"
                     />
                   ))}
                 </div>

@@ -1,12 +1,12 @@
-'use client';
+import { headers } from "next/headers";
 
-import { usePathname } from 'next/navigation';
 import Header from "./Header";
 import HeaderWhiteLogo from "./HeaderWhiteLogo";
 
-export default function HeaderWrapper() {
-  const pathname = usePathname();
-  const isUnnatovPage = pathname === '/unnatov' || pathname === '/unnatov/';
-  
+export default async function HeaderWrapper() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") || "";
+  const isUnnatovPage = pathname === "/unnatov" || pathname === "/unnatov/";
+
   return isUnnatovPage ? <HeaderWhiteLogo /> : <Header />;
 }

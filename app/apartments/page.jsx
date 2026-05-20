@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import ApartmentsCatalog from "@/components/Apartments/ApartmentsCatalog";
 
+export const dynamic = "force-dynamic";
+
 const formatSettlementDate = (date) => {
   if (!date) return "";
 
