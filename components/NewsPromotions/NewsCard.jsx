@@ -1,6 +1,6 @@
 const NewsCard = ({ item }) => {
   return (
-    <article className="group overflow-hidden rounded-4xl bg-dark10 transition hover:-translate-y-1 hover:shadow-xl">
+    <article className="group overflow-hidden rounded-4xl bg-dark10">
       <a href={`/news/${item.slug}`} className="block">
         <div className="aspect-[4/3] overflow-hidden bg-white">
           <img

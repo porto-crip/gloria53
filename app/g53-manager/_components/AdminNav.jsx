@@ -1,11 +1,13 @@
 import Link from "next/link";
 
 import { logoutAdmin } from "../actions";
+import AdminEyebrow from "./AdminEyebrow";
 
 const tabs = [
   { href: "/g53-manager", label: "Обзор", id: "overview" },
   { href: "/g53-manager/apartments", label: "Квартиры", id: "apartments" },
   { href: "/g53-manager/news", label: "Новости", id: "news" },
+  { href: "/g53-manager/applications", label: "Заявки", id: "applications" },
   {
     href: "/g53-manager/built-objects",
     label: "Построенные объекты",
@@ -15,12 +17,10 @@ const tabs = [
 
 const AdminNav = ({ active = "overview", eyebrow = "Панель управления", title }) => {
   return (
-    <header className="border-b border-dark15 pb-6">
+    <header className="">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <p className="text-sm uppercase tracking-[0.18em] text-accent">
-            {eyebrow}
-          </p>
+          <AdminEyebrow variant="accent">{eyebrow}</AdminEyebrow>
           <h1 className="mt-3 text-4xl font-medium leading-tight text-dark md:text-5xl">
             {title}
           </h1>
@@ -36,26 +36,30 @@ const AdminNav = ({ active = "overview", eyebrow = "Панель управле�
         </form>
       </div>
 
-      <nav className="mt-8 overflow-x-auto">
-        <div className="flex min-w-max gap-2 border-b border-dark15">
-          {tabs.map((tab) => {
-            const isActive = active === tab.id;
+      <nav className="mt-8">
+        <div className="relative border-b border-dark15">
+          <div>
+            <div className="flex min-w-max">
+              {tabs.map((tab) => {
+                const isActive = active === tab.id;
 
-            return (
-              <Link
-                key={tab.id}
-                href={tab.href}
-                className={`relative px-1 pb-4 pr-8 text-sm font-medium transition ${
-                  isActive ? "text-dark" : "text-dark50 hover:text-dark"
-                }`}
-              >
-                {tab.label}
-                {isActive ? (
-                  <span className="absolute inset-x-0 bottom-[-1px] h-0.5 bg-accent" />
-                ) : null}
-              </Link>
-            );
-          })}
+                return (
+                  <Link
+                    key={tab.id}
+                    href={tab.href}
+                    className={`relative px-4 pb-4 text-sm font-medium transition ${
+                      isActive ? "text-dark" : "text-dark50 hover:text-dark"
+                    }`}
+                  >
+                    {tab.label}
+                    {isActive ? (
+                      <span className="absolute inset-x-0 -bottom-px h-0.5 bg-accent" />
+                    ) : null}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </nav>
     </header>

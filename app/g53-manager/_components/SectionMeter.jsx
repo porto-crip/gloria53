@@ -1,3 +1,5 @@
+import AdminEyebrow from "./AdminEyebrow";
+
 const SectionMeter = ({ items = [] }) => {
   const maxValue = Math.max(...items.map((item) => item.value), 1);
 
@@ -5,11 +7,9 @@ const SectionMeter = ({ items = [] }) => {
     <section className="overflow-hidden rounded-4xl border border-dark15 bg-white">
       <div className="grid lg:grid-cols-[220px_1fr]">
         <div className="bg-dark p-6 text-white">
-          <p className="text-sm uppercase tracking-[0.18em] text-white/45">
-            Состояние
-          </p>
-          <p className="mt-4 text-3xl font-medium leading-tight">
-            Рабочий срез раздела
+          <AdminEyebrow variant="light">ОБЗОР</AdminEyebrow>
+          <p className="mt-2 text-3xl font-medium leading-tight">
+            Статистика раздела
           </p>
         </div>
 

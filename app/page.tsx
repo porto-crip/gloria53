@@ -1,27 +1,38 @@
+import { prisma } from "@/lib/prisma";
 import PromoCard from "@/components/PromoCard";
 import Filter from "@/components/Filter/page";
 import CardComplex from "@/components/UI/CardComplex";
 import NewsModule from "@/components/NewsPromotions/NewsModule/page";
-export default function Home() {
+
+const getMainPromoCards = async () => {
+  return prisma.newsItem.findMany({
+    where: { isPublished: true, showOnMain: true },
+    orderBy: [{ sortOrder: "asc" }, { publishedAt: "desc" }],
+    select: { title: true, excerpt: true, image: true, slug: true },
+  });
+};
+
+export default async function Home() {
+  const promoCards = await getMainPromoCards();
+
   return (
     <main className="min-h-screen">
-      <section className="container-padding section-sm">
-        <div className="grid gap-6 lg:grid-cols-2">
-          <PromoCard
-            title="Семейная ипотека от 6%"
-            text="От наших партнёров — СберБанк · ВТБ"
-            image="/wb-ipoteka.png"
-            alt="Семейная ипотека"
-          />
-
-          <PromoCard
-            title="Новые квартиры в ЖК Юннатов"
-            text="Позиция №1 готова к заселению"
-            image="/wb-unnatov.png"
-            alt="Новые квартиры в ЖК Юннатов"
-          />
-        </div>
-      </section>
+      {promoCards.length > 0 && (
+        <section className="container-padding section-sm">
+          <div className="grid gap-6 lg:grid-cols-2">
+            {promoCards.map((card) => (
+              <PromoCard
+                key={card.slug}
+                title={card.title}
+                text={card.excerpt}
+                image={card.image || "/wb-ipoteka.png"}
+                alt={card.title}
+                href={`/news/${card.slug}`}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="container-padding section">
         <h1 className="section-title">

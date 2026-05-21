@@ -159,6 +159,7 @@ model NewsItem {
   type                 String   @default("news")
   isFeatured           Boolean  @default(false)
   isPublished          Boolean  @default(true)
+  showOnMain           Boolean  @default(false)
   sortOrder            Int      @default(0)
 
   residentialComplex   ResidentialComplex? @relation(fields: [residentialComplexId], references: [id], onDelete: SetNull)

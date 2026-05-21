@@ -8,7 +8,7 @@ const FeaturedPromoBlock = ({ item }) => {
   const href = item.slug ? `/news/${item.slug}` : "#";
 
   return (
-    <section className="group grid h-full overflow-hidden rounded-3xl border border-dark15 bg-[#EFEEE9] transition duration-300 hover:border-accent/40 hover:shadow-lg lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_360px]">
+    <section className="group grid h-full overflow-hidden rounded-3xl  bg-[#EFEEE9] lg:grid-cols-[minmax(0,1fr)_320px] xl:grid-cols-[minmax(0,1fr)_360px]">
       <div className="flex h-full flex-col justify-between p-5 text-dark sm:p-6 lg:p-7">
         <div>
           <div className="mb-5 flex flex-wrap items-center gap-2">

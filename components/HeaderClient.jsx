@@ -58,7 +58,7 @@ const HeaderClient = ({
 
         <nav
           className={`
-            flex w-full items-center justify-between rounded-4xl px-8 py-2
+            flex w-full items-center justify-between rounded-4xl px-8 h-16
             ${headerBackground}
           `}
           aria-label="Основная навигация"

@@ -9,20 +9,58 @@ import MortgageInfoBlock from "@/components/MortgageInfoBlock";
 import SliderSwitch from "@/components/UI/SliderSwitch";
 import AppartmentCard from "@/components/UI/AppartmentCard";
 
+export const DEFAULT_FILTERS = {
+  rooms: [],
+  priceRange: [0, 17],
+  areaFrom: "",
+  areaTo: "",
+  floorFrom: "",
+  floorTo: "",
+  floorFeatures: [],
+};
+
+const applyFilters = (apartments, filters) =>
+  apartments.filter((apt) => {
+    if (filters.rooms.length > 0 && !filters.rooms.includes(String(apt.rooms))) return false;
+
+    const priceM = apt.price / 1_000_000;
+    if (priceM < filters.priceRange[0] || priceM > filters.priceRange[1]) return false;
+
+    const area = parseFloat(apt.areaTotal);
+    if (filters.areaFrom && area < parseFloat(filters.areaFrom)) return false;
+    if (filters.areaTo && area > parseFloat(filters.areaTo)) return false;
+
+    if (filters.floorFrom && apt.floor < parseInt(filters.floorFrom)) return false;
+    if (filters.floorTo && apt.floor > parseInt(filters.floorTo)) return false;
+
+    if (filters.floorFeatures.includes("Не первый") && apt.floor === 1) return false;
+    if (filters.floorFeatures.includes("Не последний") && apt.floorsTotal && apt.floor >= apt.floorsTotal) return false;
+    if (filters.floorFeatures.includes("Последний") && (!apt.floorsTotal || apt.floor !== apt.floorsTotal)) return false;
+
+    return true;
+  });
+
 const ApartmentsCatalog = ({ apartments = [], complexes = [] }) => {
   const [selectedComplex, setSelectedComplex] = useState(
     complexes[0]?.name || "ЖК Юннатов",
   );
-
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [view, setView] = useState("grid");
 
-  const filteredApartments = useMemo(() => {
-    return apartments.filter((apartment) => {
-      if (!selectedComplex) return true;
+  const updateFilter = (key, value) =>
+    setFilters((prev) => ({ ...prev, [key]: value }));
 
-      return apartment.complexName === selectedComplex;
-    });
-  }, [apartments, selectedComplex]);
+  const resetFilters = () => setFilters(DEFAULT_FILTERS);
+
+  const complexFiltered = useMemo(
+    () => apartments.filter((apt) => apt.complexName === selectedComplex),
+    [apartments, selectedComplex],
+  );
+
+  const filteredApartments = useMemo(
+    () => applyFilters(complexFiltered, filters),
+    [complexFiltered, filters],
+  );
 
   return (
     <div className="container-padding mx-auto">
@@ -38,7 +76,12 @@ const ApartmentsCatalog = ({ apartments = [], complexes = [] }) => {
       </div>
 
       <article>
-        <Filter />
+        <Filter
+          filters={filters}
+          onFiltersChange={updateFilter}
+          onReset={resetFilters}
+          matchingCount={filteredApartments.length}
+        />
 
         <div className="mt-6 flex items-center justify-between gap-4">
           <SortDropdown
@@ -46,7 +89,6 @@ const ApartmentsCatalog = ({ apartments = [], complexes = [] }) => {
             iconLink="/chevron-arrow.svg"
             iconAlt="next-to-page"
           />
-
           <SliderSwitch view={view} setView={setView} />
         </div>
       </article>
@@ -71,12 +113,17 @@ const ApartmentsCatalog = ({ apartments = [], complexes = [] }) => {
         </div>
       ) : (
         <div className="mt-12 rounded-4xl bg-dark10 p-8 text-center">
-          <h2 className="text-2xl font-medium text-dark">
-            Квартиры не найдены
-          </h2>
-
+          <h2 className="text-2xl font-medium text-dark">Квартиры не найдены</h2>
           <p className="mt-3 text-dark60">
-            Сейчас для выбранного жилого комплекса нет доступных квартир.
+            Попробуйте изменить параметры фильтра или{" "}
+            <button
+              type="button"
+              onClick={resetFilters}
+              className="text-accent underline-offset-2 hover:underline"
+            >
+              сбросить фильтры
+            </button>
+            .
           </p>
         </div>
       )}

@@ -123,8 +123,9 @@ const getApartment = async (id) => {
   return serializeApartment(apartment);
 };
 
-export default async function ApartmentPage({ params }) {
+export default async function ApartmentPage({ params, searchParams }) {
   const { id } = await params;
+  const { success } = await searchParams;
 
   const apartment = await getApartment(id);
 
@@ -143,7 +144,7 @@ export default async function ApartmentPage({ params }) {
             apartmentTitle={apartmentTitle}
           />
 
-          <ApartmentInfoPanel apartment={apartment} />
+          <ApartmentInfoPanel apartment={apartment} showSuccess={success === "1"} />
         </div>
       </section>
     </main>

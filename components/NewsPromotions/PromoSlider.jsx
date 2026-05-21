@@ -11,7 +11,7 @@ const PromoSlider = ({ items = [] }) => {
   if (!items.length) return null;
 
   return (
-    <section className="overflow-hidden">
+    <section className="overflow-hidden ">
       <Swiper
         modules={[Autoplay]}
         slidesPerView={1}
@@ -23,12 +23,12 @@ const PromoSlider = ({ items = [] }) => {
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
-        className="overflow-visible!"
+        className="overflow-visible! rounded-4xl!"
       >
         {items.map((item) => (
           <SwiperSlide
             key={item.id}
-            className="h-[430px]! sm:h-[390px]! lg:h-[340px]!"
+            className="h-[430px]! sm:h-[390px]! lg:h-[340px]! rounded-4xl"
           >
             <FeaturedPromoBlock item={item} />
           </SwiperSlide>

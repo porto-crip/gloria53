@@ -1,60 +1,82 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 import ButtonParam from "@/components/Filter/UI/ButtonSelectParam";
 import Button from "@/components/UI/Button";
 import Range from "@/components/Filter/UI/Range";
 import FilterModal from "@/components/Filter/UI/FilterModal";
-import { ChevronRight } from '@/icons/ChevronRight';
+import { ChevronRight } from "@/icons/ChevronRight";
 import styles from "./Filter.module.css";
 
 const ROOM_OPTIONS = ["1", "2", "3"];
 
-const Filter = () => {
-  const [stateParam, setStateParam] = useState([]);
+export const DEFAULT_FILTERS = {
+  rooms: [],
+  priceRange: [0, 17],
+  areaFrom: "",
+  areaTo: "",
+  floorFrom: "",
+  floorTo: "",
+  floorFeatures: [],
+};
+
+// Controlled mode: onFiltersChange + filters are passed from parent (ApartmentsCatalog).
+// Standalone mode: no props → manages own state, "Показать" navigates to /apartments.
+const Filter = ({
+  filters: externalFilters,
+  onFiltersChange,
+  onReset,
+  matchingCount = null,
+}) => {
+  const router = useRouter();
+  const isControlled = Boolean(onFiltersChange);
+
+  const [internalFilters, setInternalFilters] = useState(DEFAULT_FILTERS);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-  const [priceRange, setPriceRange] = useState([0, 17]);
 
-  const handleParamClick = (paramData) => {
-    setStateParam((prev) => {
-      if (paramData.isActive) {
-        return [...prev, paramData.value];
-      }
+  const filters = isControlled ? externalFilters : internalFilters;
 
-      return prev.filter((value) => value !== paramData.value);
-    });
+  const updateFilter = (key, value) => {
+    if (isControlled) {
+      onFiltersChange(key, value);
+    } else {
+      setInternalFilters((prev) => ({ ...prev, [key]: value }));
+    }
+  };
+
+  const handleReset = () => {
+    if (isControlled) {
+      onReset?.();
+    } else {
+      setInternalFilters(DEFAULT_FILTERS);
+    }
   };
 
   const toggleRoom = (room) => {
-    setStateParam((prev) => {
-      if (prev.includes(room)) {
-        return prev.filter((value) => value !== room);
-      }
-
-      return [...prev, room];
-    });
+    const next = filters.rooms.includes(room)
+      ? filters.rooms.filter((r) => r !== room)
+      : [...filters.rooms, room];
+    updateFilter("rooms", next);
   };
 
-  const resetRooms = () => {
-    setStateParam([]);
+  const handleShowClick = () => {
+    if (!isControlled) {
+      router.push("/apartments");
+    }
   };
 
-  const closeParamClick = (indexToDrop) => {
-    setStateParam((prev) => prev.filter((_, index) => index !== indexToDrop));
-  };
-
-  const openFilterModal = () => {
-    setIsFilterModalOpen(true);
-  };
-
-  const closeFilterModal = () => {
-    setIsFilterModalOpen(false);
-  };
+  const buttonLabel =
+    matchingCount !== null
+      ? `Показать предложения · ${matchingCount}`
+      : "Показать предложения";
 
   return (
     <>
-      <div className="mt-12 mb-6 grid gap-6">
+      <div className="mb-6 mt-12 grid gap-6">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+          {/* Mobile */}
           <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-[1fr_1fr] xl:hidden">
             <Button
               text="Фильтры"
@@ -65,30 +87,36 @@ const Filter = () => {
               iconAlt=""
               iconClassName="h-5 w-5"
               fullWidth
-              onClick={openFilterModal}
+              onClick={() => setIsFilterModalOpen(true)}
             />
-
             <Button
-              text="Показать предложения"
+              text={buttonLabel}
               size="md"
               variant="accent"
               fullWidth
+              onClick={handleShowClick}
             />
           </div>
 
+          {/* Desktop */}
           <div className="hidden xl:flex xl:flex-wrap xl:items-start xl:gap-2 xl:gap-y-4">
             {ROOM_OPTIONS.map((room) => (
               <ButtonParam
                 key={room}
                 text={room}
-                onButtonClick={handleParamClick}
-                activeParams={stateParam}
+                onButtonClick={({ value, isActive }) => {
+                  const next = isActive
+                    ? [...filters.rooms, value]
+                    : filters.rooms.filter((r) => r !== value);
+                  updateFilter("rooms", next);
+                }}
+                activeParams={filters.rooms}
               />
             ))}
 
             <Range
-              values={priceRange}
-              onChange={setPriceRange}
+              values={filters.priceRange}
+              onChange={(val) => updateFilter("priceRange", val)}
               className={styles.filterRange}
             />
 
@@ -98,25 +126,30 @@ const Filter = () => {
               variant="outline"
               iconImport={ChevronRight}
               iconClassName="w-5 h-5 rotate-270"
-              onClick={openFilterModal}
+              onClick={() => setIsFilterModalOpen(true)}
             />
           </div>
 
           <div className="hidden xl:block">
-            <Button text="Показать предложения" size="md" variant="accent" />
+            <Button
+              text={buttonLabel}
+              size="md"
+              variant="accent"
+              onClick={handleShowClick}
+            />
           </div>
         </div>
 
-        {stateParam.length > 0 ? (
+        {filters.rooms.length > 0 ? (
           <div className="hidden flex-wrap gap-2 xl:flex">
-            {stateParam.map((text, index) => (
+            {filters.rooms.map((room) => (
               <button
-                key={`${text}-${index}`}
+                key={room}
                 type="button"
-                onClick={() => closeParamClick(index)}
+                onClick={() => toggleRoom(room)}
                 className="flex h-10 items-center gap-2 rounded-4xl bg-accent40 px-5 text-sm text-dark transition hover:bg-accent/20"
               >
-                <span>{`${text}-комнатные`}</span>
+                <span>{`${room}-комнатные`}</span>
                 <img src="/close.svg" alt="" className="h-4 w-4" />
               </button>
             ))}
@@ -125,13 +158,12 @@ const Filter = () => {
       </div>
 
       <FilterModal
-        resetRooms={resetRooms}
         isOpen={isFilterModalOpen}
-        onClose={closeFilterModal}
-        selectedRooms={stateParam}
-        onToggleRoom={toggleRoom}
-        priceRange={priceRange}
-        onPriceChange={setPriceRange}
+        onClose={() => setIsFilterModalOpen(false)}
+        filters={filters}
+        onFiltersChange={updateFilter}
+        onReset={handleReset}
+        matchingCount={matchingCount}
       />
     </>
   );

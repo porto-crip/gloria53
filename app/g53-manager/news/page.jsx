@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
+import Button from "@/components/UI/Button";
+import AdminEyebrow from "../_components/AdminEyebrow";
 import { requireAdmin } from "@/lib/adminAuth";
-import { createNewsItem, deleteNewsItem, updateNewsItem } from "../actions";
 import AdminNav from "../_components/AdminNav";
 import AdminPagination from "../_components/AdminPagination";
 import SectionMeter from "../_components/SectionMeter";
@@ -15,140 +16,23 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 
-const formatInputDate = (date) => {
-  if (!date) return "";
-
-  return date.toISOString().slice(0, 10);
+const typeLabels = {
+  news: "Новости",
+  promotion: "Акция",
+  construction: "Стройка",
+  tips: "Покупателю",
+  mortgage: "Ипотека",
 };
 
-const NewsFields = ({ item = null }) => {
-  return (
-    <div className="grid gap-4">
-      {item ? <input type="hidden" name="id" value={item.id} /> : null}
-
-      <div className="grid gap-4 lg:grid-cols-2">
-        <label className="grid gap-2 text-sm font-medium text-dark">
-          Заголовок
-          <input
-            name="title"
-            defaultValue={item?.title || ""}
-            className="h-12 rounded-4xl border border-dark15 bg-white px-5 text-base outline-none transition focus:border-accent"
-            required
-          />
-        </label>
-
-        <label className="grid gap-2 text-sm font-medium text-dark">
-          Slug
-          <input
-            name="slug"
-            defaultValue={item?.slug || ""}
-            className="h-12 rounded-4xl border border-dark15 bg-white px-5 text-base outline-none transition focus:border-accent"
-            required
-          />
-        </label>
-      </div>
-
-      <label className="grid gap-2 text-sm font-medium text-dark">
-        Краткое описание
-        <textarea
-          name="excerpt"
-          defaultValue={item?.excerpt || ""}
-          rows={2}
-          className="rounded-3xl border border-dark15 bg-white px-5 py-4 text-base outline-none transition focus:border-accent"
-        />
-      </label>
-
-      <label className="grid gap-2 text-sm font-medium text-dark">
-        Текст материала
-        <textarea
-          name="content"
-          defaultValue={item?.content?.join("\n\n") || ""}
-          rows={4}
-          className="rounded-3xl border border-dark15 bg-white px-5 py-4 text-base outline-none transition focus:border-accent"
-        />
-      </label>
-
-      <div className="grid gap-4 lg:grid-cols-4">
-        <label className="grid gap-2 text-sm font-medium text-dark">
-          Тип
-          <select
-            name="type"
-            defaultValue={item?.type || "news"}
-            className="h-12 rounded-4xl border border-dark15 bg-white px-5 text-base outline-none transition focus:border-accent"
-          >
-            <option value="news">Новости</option>
-            <option value="promotion">Акция</option>
-            <option value="construction">Ход строительства</option>
-            <option value="tips">Полезно покупателю</option>
-            <option value="mortgage">Ипотека</option>
-          </select>
-        </label>
-
-        <label className="grid gap-2 text-sm font-medium text-dark">
-          Метка
-          <input
-            name="label"
-            defaultValue={item?.label || "Новости"}
-            className="h-12 rounded-4xl border border-dark15 bg-white px-5 text-base outline-none transition focus:border-accent"
-          />
-        </label>
-
-        <label className="grid gap-2 text-sm font-medium text-dark">
-          Дата
-          <input
-            name="publishedAt"
-            type="date"
-            defaultValue={formatInputDate(item?.publishedAt)}
-            className="h-12 rounded-4xl border border-dark15 bg-white px-5 text-base outline-none transition focus:border-accent"
-          />
-        </label>
-
-        <label className="grid gap-2 text-sm font-medium text-dark">
-          Порядок
-          <input
-            name="sortOrder"
-            type="number"
-            defaultValue={item?.sortOrder || 0}
-            className="h-12 rounded-4xl border border-dark15 bg-white px-5 text-base outline-none transition focus:border-accent"
-          />
-        </label>
-      </div>
-
-      <label className="grid gap-2 text-sm font-medium text-dark">
-        Изображение
-        <input
-          name="image"
-          defaultValue={item?.image || ""}
-          placeholder="/images/news/news1.jpg"
-          className="h-12 rounded-4xl border border-dark15 bg-white px-5 text-base outline-none transition focus:border-accent"
-        />
-      </label>
-
-      <div className="flex flex-wrap gap-4">
-        <label className="flex items-center gap-2 text-sm font-medium text-dark">
-          <input
-            name="isPublished"
-            type="checkbox"
-            defaultChecked={item?.isPublished ?? true}
-            className="h-4 w-4 accent-[var(--color-accent)]"
-          />
-          Опубликовано
-        </label>
-
-        <label className="flex items-center gap-2 text-sm font-medium text-dark">
-          <input
-            name="isFeatured"
-            type="checkbox"
-            defaultChecked={item?.isFeatured || false}
-            className="h-4 w-4 accent-[var(--color-accent)]"
-          />
-          В промо-блок
-        </label>
-      </div>
-    </div>
-  );
+const formatDate = (date) => {
+  if (!date) return "—";
+  return new Intl.DateTimeFormat("ru-RU", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }).format(date);
 };
 
 export default async function ManagerNewsPage({ searchParams }) {
@@ -158,21 +42,14 @@ export default async function ManagerNewsPage({ searchParams }) {
   const page = Math.max(Number(pageParam) || 1, 1);
   const skip = (page - 1) * PAGE_SIZE;
 
-  const [totalCount, publishedCount, featuredCount, newsItems] = await Promise.all([
+  const [totalCount, publishedCount, showOnMainCount, newsItems] = await Promise.all([
     prisma.newsItem.count(),
     prisma.newsItem.count({ where: { isPublished: true } }),
-    prisma.newsItem.count({ where: { isFeatured: true } }),
+    prisma.newsItem.count({ where: { showOnMain: true } }),
     prisma.newsItem.findMany({
       skip,
       take: PAGE_SIZE,
-      orderBy: [
-        {
-          sortOrder: "asc",
-        },
-        {
-          publishedAt: "desc",
-        },
-      ],
+      orderBy: [{ sortOrder: "asc" }, { publishedAt: "desc" }],
     }),
   ]);
 
@@ -188,71 +65,57 @@ export default async function ManagerNewsPage({ searchParams }) {
             items={[
               { label: "Всего", value: totalCount, caption: "материалов" },
               { label: "Опубликовано", value: publishedCount, caption: "на сайте" },
-              { label: "Промо", value: featuredCount, caption: "в слайдере" },
+              { label: "На главной", value: showOnMainCount, caption: "показываются" },
             ]}
           />
         </div>
 
-        <section id="new" className="mt-8 rounded-4xl bg-dark10 p-5 sm:p-6 lg:p-8">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <section className="mt-8 overflow-hidden rounded-4xl border border-dark15 bg-white">
+          <div className="flex flex-col gap-4 border-b border-dark15 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
             <div>
-              <p className="text-sm uppercase tracking-[0.18em] text-dark50">
-                Действие
-              </p>
+              <AdminEyebrow>Контент</AdminEyebrow>
               <h2 className="mt-2 text-2xl font-medium text-dark">
-                Добавить материал
+                Список материалов
               </h2>
             </div>
+
+            <Button variant="dark" size="sm" linkToPage="/g53-manager/news/new">
+              Добавить материал
+            </Button>
           </div>
 
-          <form action={createNewsItem} className="mt-6">
-            <NewsFields />
-
-            <button
-              type="submit"
-              className="mt-6 h-12 rounded-4xl bg-dark px-6 text-sm font-medium text-white transition hover:bg-accent active:scale-[0.98]"
-            >
-              Создать
-            </button>
-          </form>
-        </section>
-
-        <section className="mt-8 overflow-hidden rounded-4xl border border-dark15 bg-white">
-          <div className="border-b border-dark15 p-5 sm:p-6">
-            <p className="text-sm uppercase tracking-[0.18em] text-dark50">
-              Контент
-            </p>
-            <h2 className="mt-2 text-2xl font-medium text-dark">
-              Список материалов
-            </h2>
-          </div>
-
-          <div className="grid gap-0 divide-y divide-dark15">
+          <div className="divide-y divide-dark15">
             {newsItems.map((item) => (
-              <article key={item.id} className="p-5 sm:p-6 lg:p-8">
-                <form action={updateNewsItem}>
-                  <NewsFields item={item} />
-
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    <button
-                      type="submit"
-                      className="h-11 rounded-4xl bg-dark px-5 text-sm font-medium text-white transition hover:bg-accent active:scale-[0.98]"
-                    >
-                      Сохранить
-                    </button>
+              <div
+                key={item.id}
+                className="grid gap-4 p-5 sm:grid-cols-[1fr_auto] sm:items-center sm:p-6"
+              >
+                <div>
+                  <p className="text-base font-medium text-dark">
+                    {item.title}
+                  </p>
+                  <div className="mt-1.5 flex flex-wrap items-center gap-3 text-sm text-dark50">
+                    <span>{formatDate(item.publishedAt)}</span>
+                    <span className="rounded-full bg-dark10 px-2.5 py-0.5 text-xs font-medium text-dark80">
+                      {typeLabels[item.type] || item.type}
+                    </span>
+                    {!item.isPublished && (
+                      <span className="rounded-full bg-accent/10 px-2.5 py-0.5 text-xs font-medium text-accent">
+                        Скрыто
+                      </span>
+                    )}
+                    {item.showOnMain && (
+                      <span className="rounded-full bg-dark px-2.5 py-0.5 text-xs font-medium text-white">
+                        На главной
+                      </span>
+                    )}
                   </div>
-                </form>
+                </div>
 
-                <form action={deleteNewsItem} className="mt-3">
-                  <input type="hidden" name="id" value={item.id} />
-                  <button
-                    type="submit"
-                    className="h-10 rounded-4xl bg-accent/10 px-5 text-sm font-medium text-accent transition hover:bg-accent hover:text-white"
-                  >
-                    Удалить
-                  </button>
-                </form>
-              </article>
+                <Button variant="ghost" size="sm" linkToPage={`/g53-manager/news/${item.id}`}>
+                  Редактировать
+                </Button>
+              </div>
             ))}
           </div>
         </section>

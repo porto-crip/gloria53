@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { requireAdmin } from "@/lib/adminAuth";
 import AdminNav from "../../_components/AdminNav";
+import AdminEyebrow from "../../_components/AdminEyebrow";
 
 export const metadata = {
   title: "Новый построенный объект",
@@ -24,9 +25,7 @@ export default async function NewBuiltObjectPage() {
         <div className="mt-10 overflow-hidden rounded-4xl border border-dark15">
           <div className="grid lg:grid-cols-[0.8fr_1.2fr]">
             <div className="bg-dark p-6 text-white sm:p-8">
-              <p className="text-sm uppercase tracking-[0.18em] text-white/45">
-                Следующий шаг
-              </p>
+              <AdminEyebrow variant="light">Следующий шаг</AdminEyebrow>
               <h2 className="mt-3 text-3xl font-medium leading-tight">
                 Форма архивного объекта
               </h2>

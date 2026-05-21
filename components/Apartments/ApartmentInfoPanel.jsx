@@ -7,6 +7,7 @@ import { X, Check } from "lucide-react";
 import Button from "@/components/UI/Button";
 import AmenityItem from "@/components/Amenity/AmenityItem";
 import { formatted } from "@/utils/formatPrice";
+import { submitApplication } from "@/app/actions";
 
 const formatArea = (value) => {
   if (value === null || value === undefined) return "";
@@ -173,7 +174,7 @@ const RequestModal = ({ isOpen, onClose, apartment, selectedPurchase }) => {
                 </div>
               </div>
 
-              <form className="mt-6 grid gap-3">
+              <form action={submitApplication} className="mt-6 grid gap-3">
                 <label className="grid gap-2">
                   <span className="text-sm text-dark60">Ваше имя</span>
 
@@ -236,7 +237,7 @@ const RequestModal = ({ isOpen, onClose, apartment, selectedPurchase }) => {
   );
 };
 
-const ApartmentInfoPanel = ({ apartment }) => {
+const ApartmentInfoPanel = ({ apartment, showSuccess = false }) => {
   const [selectedPurchase, setSelectedPurchase] = useState(PURCHASE_OPTIONS[0]);
   const [isRequestOpen, setIsRequestOpen] = useState(false);
 
@@ -280,6 +281,12 @@ const ApartmentInfoPanel = ({ apartment }) => {
             "
           >
             <div className="pb-6">
+              {showSuccess && (
+                <div className="mb-6 rounded-3xl bg-accent/10 px-5 py-4 text-sm font-medium text-accent">
+                  Заявка отправлена — менеджер свяжется с вами в ближайшее время.
+                </div>
+              )}
+
               <div className="mb-5 flex flex-wrap items-center gap-2">
                 <span className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-white">
                   Квартира №{number}
@@ -369,7 +376,6 @@ const ApartmentInfoPanel = ({ apartment }) => {
                   }
                 />
                 <InfoRow label="Заселение" value={settlementDate} />
-                <InfoRow label="Артикул" value={article} />
               </div>
 
               {roomAreas?.length ? (

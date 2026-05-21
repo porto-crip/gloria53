@@ -38,6 +38,7 @@ const getNewsDataFromForm = (formData) => ({
   type: String(formData.get("type") || "news").trim(),
   isFeatured: parseBoolean(formData.get("isFeatured")),
   isPublished: parseBoolean(formData.get("isPublished")),
+  showOnMain: parseBoolean(formData.get("showOnMain")),
   sortOrder: Number(formData.get("sortOrder") || 0),
   publishedAt: parseDate(formData.get("publishedAt")),
 });
@@ -129,4 +130,128 @@ export const deleteNewsItem = async (formData) => {
 
   revalidatePath("/news");
   revalidatePath("/g53-manager/news");
+  redirect("/g53-manager/news");
+};
+
+export const updateApartment = async (formData) => {
+  await requireAdmin();
+
+  const id = Number(formData.get("id"));
+  if (!id) redirect("/g53-manager/apartments?error=required");
+
+  const number = String(formData.get("number") || "").trim();
+  const rooms = Number(formData.get("rooms") || 0);
+  const floor = Number(formData.get("floor") || 0);
+  const areaTotalRaw = String(formData.get("areaTotal") || "").trim();
+  const price = Number(formData.get("price") || 0);
+  const pricePerSqmRaw = String(formData.get("pricePerSqm") || "").trim();
+  const entranceRaw = String(formData.get("entrance") || "").trim();
+  const ceilingHeightRaw = String(formData.get("ceilingHeight") || "").trim();
+  const mainImage = String(formData.get("mainImage") || "").trim();
+  const planImage = String(formData.get("planImage") || "").trim();
+
+  await prisma.apartment.update({
+    where: { id },
+    data: {
+      number,
+      rooms,
+      areaTotal: areaTotalRaw,
+      price,
+      pricePerSqm: pricePerSqmRaw ? Number(pricePerSqmRaw) : null,
+      floor,
+      entrance: entranceRaw ? Number(entranceRaw) : null,
+      ceilingHeight: ceilingHeightRaw || null,
+      status: String(formData.get("status") || "available"),
+      layoutType: String(formData.get("layoutType") || "Квартира").trim(),
+      article: String(formData.get("article") || "").trim() || null,
+      mainImage: mainImage || null,
+      planImage: planImage || null,
+    },
+  });
+
+  revalidatePath("/apartments");
+  revalidatePath(`/apartments/${id}`);
+  revalidatePath("/g53-manager/apartments");
+  redirect(`/g53-manager/apartments/${id}`);
+};
+
+export const deleteApartment = async (formData) => {
+  await requireAdmin();
+
+  const id = Number(formData.get("id"));
+  if (!id) return;
+
+  await prisma.apartment.delete({ where: { id } });
+
+  revalidatePath("/apartments");
+  revalidatePath("/g53-manager/apartments");
+  redirect("/g53-manager/apartments");
+};
+
+export const updateApplicationStatus = async (formData) => {
+  await requireAdmin();
+
+  const id = Number(formData.get("id"));
+  const status = String(formData.get("status") || "new");
+  if (!id) return;
+
+  await prisma.application.update({
+    where: { id },
+    data: { status },
+  });
+
+  revalidatePath("/g53-manager/applications");
+};
+
+export const createApartment = async (formData) => {
+  await requireAdmin();
+
+  const buildingId = Number(formData.get("buildingId"));
+  const number = String(formData.get("number") || "").trim();
+  const rooms = Number(formData.get("rooms") || 0);
+  const floor = Number(formData.get("floor") || 0);
+  const areaTotalRaw = String(formData.get("areaTotal") || "").trim();
+  const price = Number(formData.get("price") || 0);
+  const pricePerSqm = Number(formData.get("pricePerSqm") || 0);
+  const mainImage = String(formData.get("mainImage") || "").trim();
+  const planImage = String(formData.get("planImage") || "").trim();
+
+  if (
+    !buildingId ||
+    !number ||
+    !rooms ||
+    !floor ||
+    !areaTotalRaw ||
+    !price ||
+    !pricePerSqm ||
+    !mainImage ||
+    !planImage
+  ) {
+    redirect("/g53-manager/apartments/new?error=required");
+  }
+
+  const entranceRaw = String(formData.get("entrance") || "").trim();
+  const ceilingHeightRaw = String(formData.get("ceilingHeight") || "").trim();
+
+  await prisma.apartment.create({
+    data: {
+      buildingId,
+      number,
+      rooms,
+      areaTotal: areaTotalRaw,
+      price,
+      pricePerSqm,
+      floor,
+      entrance: entranceRaw ? Number(entranceRaw) : null,
+      ceilingHeight: ceilingHeightRaw || "2.70",
+      status: String(formData.get("status") || "available"),
+      layoutType: "Квартира",
+      mainImage,
+      planImage,
+    },
+  });
+
+  revalidatePath("/apartments");
+  revalidatePath("/g53-manager/apartments");
+  redirect("/g53-manager/apartments");
 };

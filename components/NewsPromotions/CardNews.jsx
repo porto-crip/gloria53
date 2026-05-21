@@ -15,11 +15,11 @@ const CardNews = ({
   const href = slug ? `/news/${slug}` : "#";
 
   return (
-    <article className="group grid h-[500px] overflow-hidden rounded-3xl border border-dark10 bg-white transition duration-300 hover:-translate-y-0.5 hover:border-dark15 hover:shadow-lg">
+    <article className="group grid h-[500px] overflow-hidden rounded-3xl border border-dark10 bg-white transition duration-300 hover:border-dark15">
       <Link href={href} className="grid h-full grid-rows-[auto_1fr]">
         <div className="relative overflow-hidden bg-dark10">
           <img
-            className="h-[200px] w-full object-cover transition duration-500 group-hover:scale-[1.03] sm:h-[220px] md:h-[240px]"
+            className="h-[200px] w-full object-cover sm:h-[220px] md:h-[240px]"
             src={image}
             alt={imageAlt || title}
           />

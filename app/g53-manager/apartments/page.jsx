@@ -1,10 +1,11 @@
-import Link from "next/link";
-
 import { prisma } from "@/lib/prisma";
+import Button from "@/components/UI/Button";
+import AdminEyebrow from "../_components/AdminEyebrow";
 import { requireAdmin } from "@/lib/adminAuth";
 import AdminNav from "../_components/AdminNav";
 import AdminPagination from "../_components/AdminPagination";
 import SectionMeter from "../_components/SectionMeter";
+import Link from "next/link";
 
 export const metadata = {
   title: "Квартиры",
@@ -71,20 +72,15 @@ export default async function ManagerApartmentsPage({ searchParams }) {
         <section className="mt-8 overflow-hidden rounded-4xl border border-dark15 bg-white">
           <div className="flex flex-col gap-4 border-b border-dark15 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
             <div>
-              <p className="text-sm uppercase tracking-[0.18em] text-dark50">
-                Каталог
-              </p>
+              <AdminEyebrow>Каталог</AdminEyebrow>
               <h2 className="mt-2 text-2xl font-medium text-dark">
                 Список квартир
               </h2>
             </div>
 
-            <Link
-              href="/g53-manager/apartments/new"
-              className="h-11 w-max rounded-4xl bg-dark px-5 text-sm font-medium text-white transition hover:bg-accent"
-            >
+            <Button variant="dark" size="sm" linkToPage="/g53-manager/apartments/new">
               Добавить квартиру
-            </Link>
+            </Button>
           </div>
 
           <div className="divide-y divide-dark15">
@@ -107,17 +103,17 @@ export default async function ManagerApartmentsPage({ searchParams }) {
 
                 <div className="flex flex-wrap items-center gap-3 sm:justify-end">
                   <span className="rounded-full bg-dark10 px-3 py-1 text-sm text-dark80">
-                    {apartment.status}
+                    {apartment.status === "available" ? "В продаже" : "Забронирована/Продана"}
                   </span>
                   <span className="text-sm font-medium text-dark">
                     {formatPrice(apartment.price)} ₽
                   </span>
-                  <Link
-                    href={`/apartments/${apartment.id}`}
-                    className="text-sm font-medium text-accent transition hover:text-dark"
-                  >
+                  <Button variant="ghost" size="sm" linkToPage={`/g53-manager/apartments/${apartment.id}`}>
+                    Редактировать
+                  </Button>
+                  <Button variant="ghost" size="sm" linkToPage={`/apartments/${apartment.id}`}>
                     Открыть
-                  </Link>
+                  </Button>
                 </div>
               </div>
             ))}
