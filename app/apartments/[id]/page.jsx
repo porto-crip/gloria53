@@ -144,7 +144,7 @@ export default async function ApartmentPage({ params, searchParams }) {
             apartmentTitle={apartmentTitle}
           />
 
-          <ApartmentInfoPanel apartment={apartment} showSuccess={success === "1"} />
+          <ApartmentInfoPanel  apartment={apartment} showSuccess={success === "1"} />
         </div>
       </section>
     </main>
